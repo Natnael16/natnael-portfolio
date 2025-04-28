@@ -84,7 +84,7 @@ export const HeroSection = () => {
 					<div className="flex justify-center gap-4 sm:gap-6 mt-8 sm:mt-12">
 						{[
 							{ name: 'GitHub', icon: socialIcons.github, href: 'https://github.com/Natnael16' },
-							{ name: 'LinkedIn', icon: socialIcons.linkedin, href: 'https://www.linkedin.com/in/natnael-tadele-b3534b230' },
+							{ name: 'LinkedIn', icon: socialIcons.linkedin, href: 'https://www.linkedin.com/in/natnael-denbi-b3534b230' },
 							{ name: 'Email', icon: socialIcons.email, href: 'mailto:natnaeldenbi@gmail.com' },
 						].map((social) => (
 							<a 

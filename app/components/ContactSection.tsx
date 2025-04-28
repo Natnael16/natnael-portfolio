@@ -63,7 +63,7 @@ export const ContactSection = () => {
 						</svg>
 					</a>
 					<a
-						href="https://www.linkedin.com/in/natnael-tadele-b3534b230"
+						href="https://www.linkedin.com/in/natnael-denbi-b3534b230/"
 						target="_blank"
 						rel="noopener noreferrer"
 						className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
