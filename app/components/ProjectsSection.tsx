@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 const projects = [
   {
     title: 'QuickSync',
@@ -50,8 +50,10 @@ const projects = [
 
 export const ProjectsSection = () => {
 	const [activeImageIndex, setActiveImageIndex] = useState<{ [key: string]: number }>({});
+	const [direction, setDirection] = useState<{ [key: string]: number }>({});
 
 	const handleImageClick = (projectTitle: string, direction: 'prev' | 'next') => {
+		setDirection(prev => ({ ...prev, [projectTitle]: direction === 'next' ? 1 : -1 }));
 		setActiveImageIndex(prev => {
 			const currentIndex = prev[projectTitle] || 0;
 			const project = projects.find(p => p.title === projectTitle);
@@ -65,28 +67,52 @@ export const ProjectsSection = () => {
 		});
 	};
 
-	const handleKeyDown = (e: React.KeyboardEvent, projectTitle: string, direction: 'prev' | 'next') => {
-		if (e.key === 'Enter' || e.key === ' ') {
-			e.preventDefault();
-			handleImageClick(projectTitle, direction);
-		}
+	const slideVariants = {
+		enter: (direction: number) => ({
+			x: direction > 0 ? 1000 : -1000,
+			opacity: 0
+		}),
+		center: {
+			zIndex: 1,
+			x: 0,
+			opacity: 1
+		},
+		exit: (direction: number) => ({
+			zIndex: 0,
+			x: direction < 0 ? 1000 : -1000,
+			opacity: 0
+		})
+	};
+
+	const swipeConfidenceThreshold = 10000;
+	const swipePower = (offset: number, velocity: number) => {
+		return Math.abs(offset) * velocity;
 	};
 
 	return (
-		<section id="projects" className="py-20 px-4 bg-[#161B22] scroll-mt-20">
+		<section id="projects" className="py-20 px-4 bg-[#0D1117] scroll-mt-20">
 			<div className="max-w-6xl mx-auto">
 				<motion.h2 
 					initial={{ opacity: 0, y: 20 }}
 					whileInView={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.5 }}
-					className="text-2xl sm:text-3xl font-bold mb-8 sm:mb-12 text-center text-white"
+					className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 text-center"
 				>
-					Featured Projects
+					Projects
 				</motion.h2>
+				<motion.p 
+					initial={{ opacity: 0, y: 20 }}
+					whileInView={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.5, delay: 0.2 }}
+					className="text-gray-400 max-w-2xl mx-auto text-center mb-8 sm:mb-12"
+				>
+					My recent work and contributions
+				</motion.p>
 				
 				<div className="space-y-16">
 					{projects.map((project, projectIndex) => {
 						const currentImageIndex = activeImageIndex[project.title] || 0;
+						const currentDirection = direction[project.title] || 0;
 						
 						return (
 							<motion.div
@@ -94,94 +120,107 @@ export const ProjectsSection = () => {
 								initial={{ opacity: 0, y: 20 }}
 								whileInView={{ opacity: 1, y: 0 }}
 								transition={{ duration: 0.5 }}
-								className="bg-[#21262D] rounded-lg overflow-hidden transform hover:scale-[1.02] transition-all shadow-sm"
+								className="bg-[#161B22] rounded-lg overflow-hidden transform hover:scale-[1.02] transition-all shadow-sm border border-gray-800 hover:border-blue-500/50 group"
 							>
-								<div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-									<div className="relative h-[400px] group bg-[#161B22] flex items-center justify-center">
-										<div className="absolute inset-0 flex items-center justify-center p-4">
+								<div className="relative h-[500px] sm:h-[600px] group bg-[#161B22] flex items-center justify-center overflow-hidden">
+									<AnimatePresence initial={false} custom={currentDirection}>
+										<motion.div
+											key={currentImageIndex}
+											custom={currentDirection}
+											variants={slideVariants}
+											initial="enter"
+											animate="center"
+											exit="exit"
+											transition={{
+												x: { type: "spring", stiffness: 300, damping: 30 },
+												opacity: { duration: 0.2 }
+											}}
+											drag="x"
+											dragConstraints={{ left: -200, right: 200 }}
+											dragElastic={0.2}
+											dragMomentum={false}
+											onDragEnd={(e, { offset, velocity }) => {
+												const swipe = swipePower(offset.x, velocity.x);
+
+												if (swipe < -swipeConfidenceThreshold) {
+													handleImageClick(project.title, 'next');
+												} else if (swipe > swipeConfidenceThreshold) {
+													handleImageClick(project.title, 'prev');
+												}
+											}}
+											className="absolute inset-0 flex items-center justify-center p-4 cursor-pointer"
+										>
 											<Image
 												src={project.images[currentImageIndex]}
 												alt={`${project.title} - Screenshot ${currentImageIndex + 1}`}
 												width={800}
 												height={600}
-												className="object-contain max-h-full max-w-full"
+												className="object-contain max-h-full max-w-full rounded-lg select-none pointer-events-none"
 												priority={projectIndex === 0}
 												loading={projectIndex === 0 ? "eager" : "lazy"}
 											/>
-										</div>
-										<div className="absolute inset-0 bg-gradient-to-b from-[#21262D]/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-										
-										{/* Navigation Buttons */}
-										{project.images.length > 1 && (
-											<>
-												<button
-													onClick={() => handleImageClick(project.title, 'prev')}
-													onKeyDown={(e) => handleKeyDown(e, project.title, 'prev')}
-													className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#161B22]"
-													aria-label="Previous image"
-												>
-													←
-												</button>
-												<button
-													onClick={() => handleImageClick(project.title, 'next')}
-													onKeyDown={(e) => handleKeyDown(e, project.title, 'next')}
-													className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#161B22]"
-													aria-label="Next image"
-												>
-													→
-												</button>
-											</>
-										)}
-										
-										{/* Image Indicators */}
-										{project.images.length > 1 && (
-											<div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-												{project.images.map((_, index) => (
-													<button
-														key={index}
-														onClick={() => setActiveImageIndex(prev => ({ ...prev, [project.title]: index }))}
-														onKeyDown={(e) => {
-															if (e.key === 'Enter' || e.key === ' ') {
-																e.preventDefault();
-																setActiveImageIndex(prev => ({ ...prev, [project.title]: index }));
-															}
-														}}
-														className={`w-2 h-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#161B22] ${
-															index === currentImageIndex ? 'bg-white' : 'bg-white/50'
-														}`}
-														aria-label={`Go to image ${index + 1}`}
-													/>
-												))}
-											</div>
-										)}
-									</div>
+										</motion.div>
+									</AnimatePresence>
 									
-									<div className="p-8 space-y-6">
+									{/* Navigation Buttons */}
+									{project.images.length > 1 && (
+										<>
+											<button
+												onClick={(e) => {
+													e.stopPropagation();
+													handleImageClick(project.title, 'prev');
+												}}
+												className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full hover:bg-black/70 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#161B22] opacity-0 group-hover:opacity-100 transition-opacity z-10"
+												aria-label="Previous image"
+											>
+												←
+											</button>
+											<button
+												onClick={(e) => {
+													e.stopPropagation();
+													handleImageClick(project.title, 'next');
+												}}
+												className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full hover:bg-black/70 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#161B22] opacity-0 group-hover:opacity-100 transition-opacity z-10"
+												aria-label="Next image"
+											>
+												→
+											</button>
+										</>
+									)}
+									
+									{/* Image Indicators */}
+									{project.images.length > 1 && (
+										<div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+											{project.images.map((_, index) => (
+												<button
+													key={index}
+													onClick={(e) => {
+														e.stopPropagation();
+														setActiveImageIndex(prev => ({ ...prev, [project.title]: index }));
+													}}
+													className={`w-2 h-2 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#161B22] ${
+														index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+													}`}
+													aria-label={`Go to image ${index + 1}`}
+												/>
+											))}
+										</div>
+									)}
+								</div>
+								
+								<div className="p-8 space-y-6">
+									<div className="flex items-center justify-between">
 										<div>
-											<h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
-											<span className="inline-block px-3 py-1 bg-[#30363D] text-gray-300 rounded-full text-sm mb-4">
+											<h3 className="text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">{project.title}</h3>
+											<span className="inline-block px-3 py-1 bg-[#21262D] text-gray-300 rounded-full text-sm mt-2 border border-gray-700">
 												{project.category}
 											</span>
 										</div>
-										
-										<p className="text-gray-400">{project.description}</p>
-										
-										<div className="flex flex-wrap gap-2">
-											{project.techStack.map((tech) => (
-												<span
-													key={tech}
-													className="px-3 py-1 bg-[#30363D] text-gray-300 rounded-full text-sm"
-												>
-													{tech}
-												</span>
-											))}
-										</div>
-										
 										<a
 											href={project.link}
-											className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-[#21262D]"
 											target="_blank"
 											rel="noopener noreferrer"
+											className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg hover:opacity-90 transition-opacity"
 										>
 											View Project
 											<svg
@@ -199,6 +238,19 @@ export const ProjectsSection = () => {
 												/>
 											</svg>
 										</a>
+									</div>
+									
+									<p className="text-gray-400">{project.description}</p>
+									
+									<div className="flex flex-wrap gap-2">
+										{project.techStack.map((tech) => (
+											<span
+												key={tech}
+												className="px-3 py-1 bg-[#21262D] text-gray-300 rounded-full text-sm border border-gray-700 hover:border-blue-500/50 transition-colors"
+											>
+												{tech}
+											</span>
+										))}
 									</div>
 								</div>
 							</motion.div>
