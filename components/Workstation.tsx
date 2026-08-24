@@ -264,14 +264,14 @@ export default function Workstation() {
                 </div>
               </div>
 
-              {/* interactivity hint, mouse-capable pointers only */}
+              {/* interactivity hint, mouse-capable pointers only. Fades out once used. */}
               <p
-                className={`pointer-hint mt-4 items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] transition-opacity duration-500 ${
-                  engaged ? "text-slate-600 opacity-50" : "text-accent/70 opacity-100"
+                className={`pointer-hint mt-4 items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-[0.18em] text-accent/70 transition-opacity duration-500 ${
+                  engaged ? "opacity-0" : "opacity-100"
                 }`}
               >
                 <CursorIcon className="h-3.5 w-3.5" />
-                {engaged ? "he is watching your cursor" : "move your cursor over the desk"}
+                move your cursor over the desk
               </p>
             </div>
           </Reveal>
