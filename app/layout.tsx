@@ -1,82 +1,43 @@
-import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
-import './globals.css';
-
-const geistSans = Geist({
-	variable: '--font-geist-sans',
-	subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-	variable: '--font-geist-mono',
-	subsets: ['latin'],
-});
+import type { Metadata } from "next";
+import "@fontsource-variable/inter";
+import "@fontsource-variable/space-grotesk";
+import "@fontsource-variable/jetbrains-mono";
+import "./globals.css";
 
 export const metadata: Metadata = {
-	title: 'Natnael - Full Stack Developer',
-	description:
-		'Experienced Full Stack Developer specializing in Flutter, Django, React, Next.js, and Node.js. Building modern web applications and mobile solutions with a focus on performance, scalability, and user experience.',
-	keywords: [
-		'Full Stack Developer',
-		'Flutter Developer',
-		'Django Developer',
-		'React Developer',
-		'Next.js Developer',
-		'Node.js Developer',
-		'Mobile Development',
-		'Backend Development',
-		'Frontend Development',
-		'JavaScript',
-		'TypeScript',
-		'Python',
-		'Dart',
-		'HTML5',
-		'CSS3',
-		'Responsive Design',
-		'UI/UX',
-		'Web Development',
-		'Mobile App Development',
-		'API Development',
-		'Database Design',
-		'Performance Optimization',
-		'Natnael',
-	],
-	authors: [{ name: 'Natnael' }],
-	creator: 'Natnael',
-	openGraph: {
-		title: 'Natnael - Full Stack Developer Portfolio',
-		description: 'Full Stack Developer specializing in web and mobile development. Expert in Flutter, Django, React, Next.js, and Node.js. Building scalable and performant applications.',
-		url: 'https://natnael-portfolio.vercel.app',
-		siteName: 'Natnael - Portfolio',
-		locale: 'en_US',
-		type: 'website',
-	},
-	twitter: {
-		card: 'summary',
-		title: 'Natnael - Full Stack Developer',
-		description: 'Full Stack Developer specializing in web and mobile development. Expert in Flutter, Django, React, Next.js, and Node.js.',
-	},
-	robots: {
-		index: true,
-		follow: true,
-		googleBot: {
-			index: true,
-			follow: true,
-			'max-video-preview': -1,
-			'max-image-preview': 'large',
-			'max-snippet': -1,
-		},
-	},
+  metadataBase: new URL("https://natnael-portfolio-tau.vercel.app"),
+  title: "Natnael Tadele — Senior Full-Stack & AI Engineer",
+  description:
+    "Senior Full-Stack Software Engineer building production web, mobile and AI systems. Top Rated Plus on Upwork with 100% Job Success and 2,200+ hours delivered for clients in Germany, the USA and the UAE.",
+  keywords: [
+    "Full-Stack Developer",
+    "AI Engineer",
+    "Next.js",
+    "Django",
+    "Node.js",
+    "Flutter",
+    "RAG",
+    "LLM",
+    "Upwork Top Rated Plus",
+  ],
+  openGraph: {
+    title: "Natnael Tadele — Senior Full-Stack & AI Engineer",
+    description:
+      "Production web, mobile & AI systems that ship and scale. Top Rated Plus · 100% Job Success · 2,200+ hours on Upwork.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Natnael Tadele — Senior Full-Stack & AI Engineer",
+    description:
+      "Production web, mobile & AI systems that ship and scale. Top Rated Plus · 100% Job Success · 2,200+ hours on Upwork.",
+  },
 };
 
-export default function RootLayout({
-	children,
-}: Readonly<{
-	children: React.ReactNode;
-}>) {
-	return (
-		<html lang="en">
-			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
-		</html>
-	);
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body className="font-body bg-base-950 text-slate-200">{children}</body>
+    </html>
+  );
 }
