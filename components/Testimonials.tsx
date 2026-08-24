@@ -44,7 +44,7 @@ export default function Testimonials() {
             Every client. Five stars. In their own words.
           </h2>
           <p className="mt-4 max-w-xl text-sm text-slate-400">
-            Unedited feedback from completed contracts —{" "}
+            Unedited feedback from completed contracts,{" "}
             <a
               href={site.upworkUrl}
               target="_blank"

@@ -86,3 +86,85 @@ body {
 .section-kicker {
   @apply font-mono text-xs uppercase tracking-[0.28em] text-accent;
 }
+
+/* ── Hero aurora + scroll cue ──────────────────── */
+.aurora {
+  animation: aurora-a 19s ease-in-out infinite alternate;
+}
+@keyframes aurora-a {
+  from {
+    transform: translate(-50%, 0) scale(1);
+  }
+  to {
+    transform: translate(-50%, 34px) scale(1.14);
+  }
+}
+.aurora-slow {
+  animation: aurora-b 27s ease-in-out infinite alternate;
+}
+@keyframes aurora-b {
+  from {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.65;
+  }
+  to {
+    transform: translate(-30px, 26px) scale(1.22);
+    opacity: 1;
+  }
+}
+.scroll-cue > span {
+  animation: cue 1.9s ease-in-out infinite;
+}
+@keyframes cue {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(9px);
+    opacity: 1;
+  }
+}
+
+/* ── Workstation stage ─────────────────────────── */
+.stage {
+  --mx: 50%;
+  --my: 50%;
+  box-shadow:
+    0 44px 90px -44px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+/* Feathered edges so the clip reads as part of the page, not a video player. */
+.stage-video {
+  mask-image: radial-gradient(122% 122% at 50% 45%, black 55%, transparent 100%);
+  -webkit-mask-image: radial-gradient(122% 122% at 50% 45%, black 55%, transparent 100%);
+  filter: saturate(1.05) contrast(1.04);
+}
+.stage-spotlight {
+  background: radial-gradient(220px circle at var(--mx) var(--my), rgba(34, 211, 238, 0.17), transparent 70%);
+  mix-blend-mode: screen;
+}
+.stage-vignette {
+  background:
+    radial-gradient(132% 100% at 50% 40%, transparent 45%, rgba(5, 7, 13, 0.72) 100%),
+    linear-gradient(180deg, rgba(5, 7, 13, 0.35) 0%, transparent 22%, transparent 68%, rgba(5, 7, 13, 0.86) 100%);
+}
+.stage-scan {
+  background-image: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0 1px, transparent 1px 3px);
+}
+.stage-reflection {
+  background: linear-gradient(180deg, rgba(34, 211, 238, 0.1), transparent 70%);
+  filter: blur(22px);
+}
+.quip {
+  box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora,
+  .aurora-slow,
+  .scroll-cue > span {
+    animation: none;
+  }
+}

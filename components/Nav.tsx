@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { site } from "@/lib/data";
+import { DownloadIcon } from "./Icons";
 
 const links = [
   { href: "#services", label: "What I do" },
@@ -41,6 +42,14 @@ export default function Nav() {
             </a>
           ))}
           <a
+            href={site.resumeFile}
+            download
+            className="group inline-flex items-center gap-1.5 rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-slate-300 transition hover:border-accent/50 hover:text-white"
+          >
+            <DownloadIcon className="h-3.5 w-3.5 text-accent transition-transform group-hover:translate-y-0.5" />
+            Résumé
+          </a>
+          <a
             href="#contact"
             className="rounded-full bg-accent px-4 py-2 text-sm font-semibold text-base-950 transition hover:bg-accent-soft"
           >
@@ -73,6 +82,15 @@ export default function Nav() {
                 {l.label}
               </a>
             ))}
+            <a
+              href={site.resumeFile}
+              download
+              onClick={() => setOpen(false)}
+              className="mt-2 inline-flex items-center justify-center gap-2 rounded-full border border-accent/40 bg-accent/[0.08] px-4 py-2.5 text-center text-sm font-semibold text-white"
+            >
+              <DownloadIcon className="h-4 w-4 text-accent" />
+              Download résumé
+            </a>
             <a
               href="#contact"
               onClick={() => setOpen(false)}

@@ -6,7 +6,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://natnael-portfolio-tau.vercel.app"),
-  title: "Natnael Tadele — Senior Full-Stack & AI Engineer",
+  title: "Natnael Tadele | Senior Full-Stack & AI Engineer",
   description:
     "Senior Full-Stack Software Engineer building production web, mobile and AI systems. Top Rated Plus on Upwork with 100% Job Success and 2,200+ hours delivered for clients in Germany, the USA and the UAE.",
   keywords: [
@@ -21,14 +21,14 @@ export const metadata: Metadata = {
     "Upwork Top Rated Plus",
   ],
   openGraph: {
-    title: "Natnael Tadele — Senior Full-Stack & AI Engineer",
+    title: "Natnael Tadele | Senior Full-Stack & AI Engineer",
     description:
       "Production web, mobile & AI systems that ship and scale. Top Rated Plus · 100% Job Success · 2,200+ hours on Upwork.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Natnael Tadele — Senior Full-Stack & AI Engineer",
+    title: "Natnael Tadele | Senior Full-Stack & AI Engineer",
     description:
       "Production web, mobile & AI systems that ship and scale. Top Rated Plus · 100% Job Success · 2,200+ hours on Upwork.",
   },

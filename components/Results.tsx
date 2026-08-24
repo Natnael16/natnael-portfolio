@@ -8,7 +8,7 @@ export default function Results() {
         <Reveal>
           <p className="section-kicker">Measured impact</p>
           <h2 className="font-display mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            Numbers from live systems — not side projects.
+            Numbers from live systems, not side projects.
           </h2>
         </Reveal>
 

@@ -1,19 +1,27 @@
-# Deploy — 4 commands
+# Deploy
 
-Run these on your computer from an empty folder (replaces the old site, keeps git history):
+The site lives at https://github.com/Natnael16/natnael-portfolio and Vercel auto-deploys the `main` branch.
+
+## Shipping a change
 
 ```bash
-git clone https://github.com/Natnael16/natnael-portfolio.git && cd natnael-portfolio
-git rm -rq . && unzip -o ~/Downloads/natnael-portfolio.zip -d /tmp/newsite && cp -r /tmp/newsite/natnael-portfolio/. .
-git add -A && git commit -m "Complete redesign: premium dark personal brand site"
-git push origin main
+git add -A && git commit -m "Describe the change" && git push origin main
 ```
 
-Vercel will auto-deploy `main` — your site at **natnael-portfolio-tau.vercel.app** updates in ~1 minute.
+Vercel picks up the push and **natnael-portfolio-tau.vercel.app** updates in about a minute.
 
-(If `git push` asks for credentials: username `Natnael16`, password = a GitHub personal access token.)
+## Checking it first
 
-## After deploying
+```bash
+npm run build
+```
 
-- **Revoke the token you shared in chat** at github.com/settings/tokens — it was exposed in the conversation.
-- Check the live site on your phone and desktop.
+If the build passes locally it will pass on Vercel.
+
+## Credentials
+
+If `git push` asks for credentials, the username is `Natnael16` and the password is a GitHub personal
+access token (not your account password). Tokens are managed at github.com/settings/tokens.
+
+Rotate any token that has been pasted into a chat window, an email, or a shared document. A token grants
+the same repo access your account has, so treat it like a password.

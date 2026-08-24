@@ -1,13 +1,13 @@
 import { site, heroStats } from "@/lib/data";
-import { GitHubIcon, LinkedInIcon, UpworkIcon, MailIcon, ArrowIcon, StarIcon } from "./Icons";
+import { GitHubIcon, LinkedInIcon, UpworkIcon, MailIcon, ArrowIcon, StarIcon, DownloadIcon } from "./Icons";
 
 export default function Hero() {
   return (
     <section id="top" className="relative overflow-hidden pb-20 pt-32 sm:pt-40">
       {/* backdrop */}
       <div className="grid-lines pointer-events-none absolute inset-0" />
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[820px] -translate-x-1/2 rounded-full bg-accent/[0.13] blur-[130px]" />
-      <div className="pointer-events-none absolute -top-20 right-[10%] h-[300px] w-[300px] rounded-full bg-accent-violet/[0.10] blur-[110px]" />
+      <div className="aurora pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[820px] -translate-x-1/2 rounded-full bg-accent/[0.13] blur-[130px]" />
+      <div className="aurora-slow pointer-events-none absolute -top-20 right-[10%] h-[300px] w-[300px] rounded-full bg-accent-violet/[0.10] blur-[110px]" />
 
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
         {/* availability + proof pill */}
@@ -37,7 +37,7 @@ export default function Hero() {
           style={{ animationDelay: "90ms" }}
         >
           I build <span className="text-gradient">production systems</span>
-          <br className="hidden sm:block" /> that ship — and scale.
+          <br className="hidden sm:block" /> that ship and scale.
         </h1>
 
         <p
@@ -45,7 +45,7 @@ export default function Hero() {
           style={{ animationDelay: "180ms" }}
         >
           I&apos;m {site.shortName}, a {site.role.toLowerCase()} trusted by startups and enterprises in Germany, the
-          USA and the UAE. Web, mobile and AI — designed end-to-end, deployed to real users, and kept fast under load.
+          USA and the UAE. Web, mobile and AI, designed end-to-end, deployed to real users, and kept fast under load.
         </p>
 
         <div className="animate-fade-up mt-9 flex flex-wrap items-center gap-4" style={{ animationDelay: "270ms" }}>
@@ -55,6 +55,14 @@ export default function Hero() {
           >
             Start a project
             <ArrowIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </a>
+          <a
+            href={site.resumeFile}
+            download
+            className="group inline-flex items-center gap-2 rounded-full border border-accent/40 bg-accent/[0.08] px-6 py-3 text-sm font-semibold text-white transition hover:border-accent/70 hover:bg-accent/[0.14]"
+          >
+            <DownloadIcon className="h-4 w-4 text-accent transition-transform group-hover:translate-y-0.5" />
+            Download résumé
           </a>
           <a
             href="#work"
@@ -93,6 +101,20 @@ export default function Hero() {
               <div className="mt-1.5 text-xs leading-relaxed text-slate-500 sm:text-sm">{s.label}</div>
             </div>
           ))}
+        </div>
+
+        {/* scroll cue into the studio section */}
+        <div className="animate-fade-up mt-14 flex justify-center" style={{ animationDelay: "460ms" }}>
+          <a
+            href="#studio"
+            className="group flex flex-col items-center gap-2 text-[11px] font-mono uppercase tracking-[0.28em] text-slate-600 transition hover:text-accent"
+            aria-label="Scroll to the workstation section"
+          >
+            Keep scrolling
+            <span className="scroll-cue flex h-9 w-[22px] items-start justify-center rounded-full border border-white/12 pt-1.5 group-hover:border-accent/50">
+              <span className="h-1.5 w-1 rounded-full bg-slate-500 group-hover:bg-accent" />
+            </span>
+          </a>
         </div>
       </div>
     </section>

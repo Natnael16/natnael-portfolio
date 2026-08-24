@@ -1,6 +1,6 @@
 import { site } from "@/lib/data";
 import Reveal from "./Reveal";
-import { GitHubIcon, LinkedInIcon, UpworkIcon, MailIcon, ArrowIcon } from "./Icons";
+import { GitHubIcon, LinkedInIcon, UpworkIcon, MailIcon, ArrowIcon, DownloadIcon } from "./Icons";
 
 export default function Contact() {
   return (
@@ -13,7 +13,7 @@ export default function Contact() {
             Have a product that needs to <span className="text-gradient">ship?</span>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-slate-400">
-            I take on a small number of serious projects at a time — full builds, AI features, or rescuing systems that
+            I take on a small number of serious projects at a time: full builds, AI features, or rescuing systems that
             need to scale. Tell me what you&apos;re building and I&apos;ll reply within 24 hours.
           </p>
 
@@ -35,6 +35,14 @@ export default function Contact() {
               <UpworkIcon className="h-4 w-4 text-[#73e945]" />
               Hire me on Upwork
             </a>
+            <a
+              href={site.resumeFile}
+              download
+              className="group inline-flex items-center gap-2 rounded-full border border-white/15 px-7 py-3.5 text-sm font-semibold text-white transition hover:border-accent/50 hover:bg-white/[0.03]"
+            >
+              <DownloadIcon className="h-4 w-4 text-accent transition-transform group-hover:translate-y-0.5" />
+              Download résumé
+            </a>
           </div>
 
           <div className="mt-10 flex items-center justify-center gap-2">
@@ -55,12 +63,7 @@ export default function Contact() {
             ))}
           </div>
 
-          <p className="mt-8 text-xs text-slate-600">
-            {site.location} ·{" "}
-            <a href={site.resumeFile} className="underline decoration-slate-700 underline-offset-4 transition hover:text-slate-400" download>
-              Download résumé (PDF)
-            </a>
-          </p>
+          <p className="mt-8 text-xs text-slate-500">{site.location}</p>
         </Reveal>
       </div>
     </section>
