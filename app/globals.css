@@ -160,6 +160,15 @@ body {
 .quip {
   box-shadow: 0 12px 30px -12px rgba(0, 0, 0, 0.8);
 }
+/* The interactivity hint only means anything where there is a real cursor. */
+.pointer-hint {
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .pointer-hint {
+    display: flex;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .aurora,

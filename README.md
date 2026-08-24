@@ -38,12 +38,21 @@ When one ends the other starts from zero and takes over the stage. Because the r
 the forward clip's last frame, the swap lands on an identical image and reads as one continuous back-and-forth
 loop. Nothing seeks backwards, which is what makes it smooth.
 
-Two things keep it cheap: an `IntersectionObserver` pauses playback whenever the section is off screen, and
-`prefers-reduced-motion` freezes the forward clip on a single frame. The reverse clip is only fetched once the
-section is actually scrolled to, so the initial page load pays for one file rather than two.
+An `IntersectionObserver` pauses playback whenever the section is off screen, and `prefers-reduced-motion`
+freezes the forward clip on a single frame.
+
+Both clips preload eagerly, which costs about 6MB on first load. That is deliberate: lazy-loading the reverse
+clip meant the first handoff could arrive before its 3MB had downloaded, and the loop visibly stalled
+mid-cycle. If that page weight ever becomes a problem, re-encode the clips smaller rather than deferring the
+second one.
+
+The stage sits in the right column at roughly half width. The clips are 720p, so giving them a smaller box
+means the browser downscales rather than stretches, and they read as sharper.
 
 Moving the mouse across the stage drives a spotlight that follows the cursor. Enough cursor movement makes
-the little round operator in the corner turn red and complain.
+the little round operator in the corner turn red and complain. A hint under the stage says so, and it dims
+once you have moved the cursor there. The hint is hidden on touch devices via `(hover: hover)`, since the
+interaction needs a real pointer.
 
 To swap the clip, replace both files. They must be the same length and dimensions, and the second must be a
 true reverse of the first, or the handoff will visibly jump.
