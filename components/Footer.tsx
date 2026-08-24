@@ -7,7 +7,7 @@ export default function Footer() {
         <p>
           © {new Date().getFullYear()} {site.name}. Built with Next.js & Tailwind CSS.
         </p>
-        <p className="font-mono">natnael.dev · designed to convert, engineered to last.</p>
+        <p className="font-mono">Designed to convert, engineered to last.</p>
       </div>
     </footer>
   );

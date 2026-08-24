@@ -32,7 +32,7 @@ export default function Nav() {
     >
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
         <a href="#top" className="font-display text-lg font-semibold tracking-tight text-white">
-          natnael<span className="text-accent">.dev</span>
+          Natnael <span className="text-accent">Tadele</span>
         </a>
 
         <div className="hidden items-center gap-7 md:flex">

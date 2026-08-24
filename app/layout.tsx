@@ -5,7 +5,7 @@ import "@fontsource-variable/jetbrains-mono";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://natnael-portfolio-tau.vercel.app"),
+  metadataBase: new URL("https://natnael.website"),
   title: "Natnael Tadele | Senior Full-Stack & AI Engineer",
   description:
     "Senior Full-Stack Software Engineer building production web, mobile and AI systems. Top Rated Plus on Upwork with 100% Job Success and 2,200+ hours delivered for clients in Germany, the USA and the UAE.",

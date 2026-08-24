@@ -1,4 +1,6 @@
-# natnael.dev, personal brand site
+# Natnael Tadele, personal brand site
+
+Live at https://natnael.website
 
 Dark, premium portfolio for **Natnael Tadele Denbi**, Senior Full-Stack & AI Engineer.
 Built with **Next.js 14 (App Router) + TypeScript + Tailwind CSS**, self-hosted fonts, zero heavy dependencies.

@@ -8,7 +8,8 @@ The site lives at https://github.com/Natnael16/natnael-portfolio and Vercel auto
 git add -A && git commit -m "Describe the change" && git push origin main
 ```
 
-Vercel picks up the push and **natnael-portfolio-tau.vercel.app** updates in about a minute.
+Vercel picks up the push and **natnael.website** updates in about a minute. The old
+`natnael-portfolio-tau.vercel.app` address still works as an alias.
 
 ## Checking it first
 
