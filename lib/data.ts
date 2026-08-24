@@ -100,11 +100,20 @@ export const projects = [
   {
     name: "Enterprise Search at Elunic",
     role: "Lead Developer · Germany",
-    period: "2025 - Present",
+    period: "2025 - 2026",
     description:
       "Rebuilt document search inside an established enterprise codebase with BM25 and vector-based retrieval (~92% faster), shipped AI-powered features for internal and client-facing tools, and was promoted to Lead Developer, setting technical direction and reviewing the in-house team's code.",
     tags: ["Vector search", "BM25", "AI features", "Tech leadership", "Enterprise"],
     accent: "amber",
+  },
+  {
+    name: "KiwiKrave",
+    role: "Full-Stack Engineer · US Startup",
+    period: "2025 - 2026",
+    description:
+      "Multi-platform food ordering ecosystem: customer mobile apps, merchant dashboards, self-service kiosks and kitchen display systems. I architected the backend APIs, core business workflows and on-demand delivery relay integration.",
+    tags: ["Flutter", "Node.js", "Real-time ops", "Delivery logistics", "1K+ daily users"],
+    accent: "emerald",
   },
   {
     name: "QuickSync",
@@ -114,15 +123,6 @@ export const projects = [
       "High-traffic inventory synchronization platform serving 10,000+ active users. Merchants sell across Shopify, Amazon, Etsy, Square, eBay and Clover with reliable, near-real-time sync, after I cut critical API time by 52%.",
     tags: ["Django", "React", "Concurrency", "E-commerce APIs", "10K+ users"],
     accent: "cyan",
-  },
-  {
-    name: "KiwiKrave",
-    role: "Full-Stack Engineer · US Startup",
-    period: "2023 - Present",
-    description:
-      "Multi-platform food ordering ecosystem: customer mobile apps, merchant dashboards, self-service kiosks and kitchen display systems. I architected the backend APIs, core business workflows and on-demand delivery relay integration.",
-    tags: ["Flutter", "Node.js", "Real-time ops", "Delivery logistics", "1K+ daily users"],
-    accent: "emerald",
   },
   {
     name: "RateEat",
@@ -137,16 +137,22 @@ export const projects = [
 
 export const timeline = [
   {
-    period: "Oct 2023 - Present",
+    period: "Sep 2023 - Present",
     title: "Senior Full-Stack Engineer · Upwork (Freelance)",
     org: "Clients in Germany, the USA and the UAE",
     body: "Production systems for international clients across consumer, SaaS and enterprise domains. Top Rated Plus, 100% Job Success, 2,200+ hours. Trusted to independently design, implement and deploy features in live environments. The engagements below sit inside this practice.",
   },
   {
-    period: "Oct 2025 - Present",
+    period: "Oct 2025 - Aug 2026",
     title: "Lead Developer · Elunic",
     org: "Enterprise Software · Germany",
     body: "Rebuilt document search with BM25 and vector-based retrieval inside an established enterprise codebase, shipped AI-powered features for internal and client-facing tools, and was promoted to Lead Developer, setting technical direction and reviewing the in-house team's code.",
+  },
+  {
+    period: "Jul 2025 - Jan 2026",
+    title: "Full-Stack Engineer · KiwiKrave",
+    org: "Food-Tech Startup · USA",
+    body: "Architected the backend APIs, core business workflows and on-demand delivery relay integration behind a multi-platform food ordering ecosystem: customer apps, merchant dashboards, kiosks and kitchen displays.",
   },
   {
     period: "Apr 2025 - Present",
