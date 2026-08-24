@@ -15,14 +15,14 @@ const QUIPS = [
   "Some of us are shipping.",
 ];
 
-const REVERSE_FPS = 30;
-
 export default function Workstation() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const rafRef = useRef<number | null>(null);
+  const forwardRef = useRef<HTMLVideoElement>(null);
+  const reverseRef = useRef<HTMLVideoElement>(null);
+  const activeRef = useRef<"forward" | "reverse">("forward");
 
+  const [active, setActive] = useState<"forward" | "reverse">("forward");
   const [quip, setQuip] = useState<string | null>(null);
   const [annoyed, setAnnoyed] = useState(false);
 
@@ -31,82 +31,58 @@ export default function Workstation() {
   const lastQuipAt = useRef(0);
   const quipTimer = useRef<number | null>(null);
 
-  /* ── Ping-pong playback: forward to the end, then reverse back to the start ── */
+  /* ── Ping-pong playback ─────────────────────────────────────────────────────
+     Two clips: the original, and a pre-rendered reverse of it. When one ends the
+     other starts from zero and takes over the stage. The reverse clip's first
+     frame is the forward clip's last frame, so the swap lands on an identical
+     image and reads as one continuous loop. No backward seeking involved.      */
   useEffect(() => {
-    const v = videoRef.current;
+    const fwd = forwardRef.current;
+    const rev = reverseRef.current;
     const section = sectionRef.current;
-    if (!v || !section) return;
+    if (!fwd || !rev || !section) return;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       // Hold a single frame instead of animating. Wait for metadata, or the seek is a no-op.
       const hold = () => {
-        v.currentTime = 0.2;
+        fwd.currentTime = 0.2;
       };
-      if (v.readyState >= 1) hold();
-      else v.addEventListener("loadedmetadata", hold, { once: true });
-      return () => v.removeEventListener("loadedmetadata", hold);
+      if (fwd.readyState >= 1) hold();
+      else fwd.addEventListener("loadedmetadata", hold, { once: true });
+      return () => fwd.removeEventListener("loadedmetadata", hold);
     }
 
-    let reversing = false;
-    let visible = false;
-    let lastTs = 0;
+    let primed = false;
+    const current = () => (activeRef.current === "forward" ? fwd : rev);
+    const other = () => (activeRef.current === "forward" ? rev : fwd);
 
-    const cancel = () => {
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
-      }
-      lastTs = 0;
+    const handoff = (e: Event) => {
+      // Ignore an 'ended' from the clip that is not on stage.
+      if (e.target !== current()) return;
+      const next = other();
+      next.currentTime = 0;
+      void next.play().catch(() => {});
+      activeRef.current = activeRef.current === "forward" ? "reverse" : "forward";
+      setActive(activeRef.current);
     };
 
-    // Reverse is driven by wall-clock time, not by a fixed frame count, so it runs at the
-    // same speed as forward playback regardless of how fast the browser services seeks.
-    const stepBack = (ts: number) => {
-      const vid = videoRef.current;
-      if (!vid || !reversing) return;
-
-      if (!lastTs) lastTs = ts;
-      const dt = Math.min((ts - lastTs) / 1000, 0.1); // clamp long frame gaps
-      lastTs = ts;
-
-      // Skip issuing a new seek while one is still in flight, otherwise seeks pile up and stall.
-      if (!vid.seeking) {
-        const next = vid.currentTime - dt;
-        if (next <= 0) {
-          vid.currentTime = 0;
-          reversing = false;
-          rafRef.current = null;
-          lastTs = 0;
-          if (visible) void vid.play().catch(() => {});
-          return;
-        }
-        vid.currentTime = next;
-      }
-      rafRef.current = requestAnimationFrame(stepBack);
-    };
-
-    const onEnded = () => {
-      reversing = true;
-      // Nudge off the very last frame so the first backward seek is not a no-op.
-      v.currentTime = Math.max(0, (v.duration || 8) - 1 / REVERSE_FPS);
-      cancel();
-      rafRef.current = requestAnimationFrame(stepBack);
-    };
-
-    v.addEventListener("ended", onEnded);
+    fwd.addEventListener("ended", handoff);
+    rev.addEventListener("ended", handoff);
 
     const io = new IntersectionObserver(
       ([entry]) => {
-        visible = entry.isIntersecting;
-        if (visible) {
-          if (reversing) {
-            if (rafRef.current === null) rafRef.current = requestAnimationFrame(stepBack);
-          } else {
-            void v.play().catch(() => {});
+        if (entry.isIntersecting) {
+          // Only start fetching the reverse clip once the section is actually reached,
+          // so the initial page load does not pay for both files.
+          if (!primed) {
+            primed = true;
+            rev.preload = "auto";
+            rev.load();
           }
+          void current().play().catch(() => {});
         } else {
-          v.pause();
-          cancel();
+          fwd.pause();
+          rev.pause();
         }
       },
       { threshold: 0.25 }
@@ -114,9 +90,9 @@ export default function Workstation() {
     io.observe(section);
 
     return () => {
-      v.removeEventListener("ended", onEnded);
+      fwd.removeEventListener("ended", handoff);
+      rev.removeEventListener("ended", handoff);
       io.disconnect();
-      cancel();
     };
   }, []);
 
@@ -188,7 +164,7 @@ export default function Workstation() {
             className="stage group relative mt-12 aspect-video w-full overflow-hidden rounded-[1.75rem] border border-white/10 bg-base-950"
           >
             <video
-              ref={videoRef}
+              ref={forwardRef}
               src="/workstation.mp4"
               muted
               playsInline
@@ -197,7 +173,23 @@ export default function Workstation() {
               controls={false}
               controlsList="nodownload noplaybackrate noremoteplayback"
               aria-hidden
-              className="stage-video pointer-events-none h-full w-full object-cover"
+              className={`stage-video pointer-events-none absolute inset-0 h-full w-full object-cover ${
+                active === "forward" ? "opacity-100" : "opacity-0"
+              }`}
+            />
+            <video
+              ref={reverseRef}
+              src="/workstation-reverse.mp4"
+              muted
+              playsInline
+              preload="none"
+              disablePictureInPicture
+              controls={false}
+              controlsList="nodownload noplaybackrate noremoteplayback"
+              aria-hidden
+              className={`stage-video pointer-events-none absolute inset-0 h-full w-full object-cover ${
+                active === "reverse" ? "opacity-100" : "opacity-0"
+              }`}
             />
 
             {/* cursor spotlight */}
