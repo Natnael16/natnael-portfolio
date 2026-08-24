@@ -137,12 +137,6 @@ export const projects = [
 
 export const timeline = [
   {
-    period: "Oct 2023 - Present",
-    title: "Senior Full-Stack Engineer · Upwork (Freelance)",
-    org: "Elunic (Germany) · KiwiKrave (USA)",
-    body: "Production systems for international clients across consumer, SaaS and enterprise domains. Top Rated Plus, 100% Job Success, 2,200+ hours. Trusted to independently design, implement and deploy features in live environments; promoted to Lead Developer at Elunic.",
-  },
-  {
     period: "Apr 2025 - Present",
     title: "Lead Engineer · Adify-AI",
     org: "AI SaaS Product",
@@ -153,6 +147,12 @@ export const timeline = [
     title: "Software Developer · QuickSync",
     org: "Dubai, UAE",
     body: "Built and maintained a high-traffic inventory sync platform for 10,000+ active users across six major e-commerce channels.",
+  },
+  {
+    period: "Oct 2023 - Present",
+    title: "Senior Full-Stack Engineer · Upwork (Freelance)",
+    org: "Elunic (Germany) · KiwiKrave (USA)",
+    body: "Production systems for international clients across consumer, SaaS and enterprise domains. Top Rated Plus, 100% Job Success, 2,200+ hours. Trusted to independently design, implement and deploy features in live environments; promoted to Lead Developer at Elunic.",
   },
   {
     period: "Dec 2022 - Mar 2024",
