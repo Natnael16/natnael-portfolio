@@ -68,10 +68,10 @@ export const results = [
       "Replaced SQL LIKE queries with BM25 + vector-based search in an enterprise system at Elunic (Germany), then cut latency further with caching and query optimization.",
   },
   {
-    metric: "52%",
-    headline: "reduction in critical API time",
+    metric: "158M+",
+    headline: "inventory events a day at full load",
     detail:
-      "Re-engineered QuickSync's hottest execution path with concurrent processing and backend optimization, on a platform serving 10,000+ active users.",
+      "QuickSync's sync engine is sized for roughly 5,000 merchants running about 22 connected storefronts each. At one inventory webhook per store per minute that is 6.6 million events an hour, and over 158 million a day. I cut critical API time by 52% with concurrent processing to keep that pipeline inside its window.",
   },
   {
     metric: "1,000+",
