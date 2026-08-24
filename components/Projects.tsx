@@ -1,4 +1,4 @@
-import { projects } from "@/lib/data";
+import { projects, alsoShipped } from "@/lib/data";
 import Reveal from "./Reveal";
 
 const accentStyles: Record<string, string> = {
@@ -46,6 +46,24 @@ export default function Projects() {
             </Reveal>
           ))}
         </div>
+
+        {/* Shorter engagements: deliberately lighter than the cards above. */}
+        <Reveal delay={80}>
+          <div className="mt-14 border-t border-white/[0.06] pt-10">
+            <p className="font-mono text-xs uppercase tracking-[0.28em] text-slate-500">Also shipped</p>
+            <div className="mt-6 grid gap-x-8 gap-y-7 sm:grid-cols-2 lg:grid-cols-3">
+              {alsoShipped.map((s) => (
+                <div key={s.name}>
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <h3 className="font-display text-[15px] font-semibold text-white">{s.name}</h3>
+                    <span className="font-mono text-[11px] text-slate-600">{s.period}</span>
+                  </div>
+                  <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{s.detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

@@ -135,6 +135,25 @@ export const projects = [
   },
 ];
 
+/** Shorter engagements. Rendered as a compact strip under the main project cards. */
+export const alsoShipped = [
+  {
+    name: "Computer vision module",
+    period: "2025",
+    detail: "A focused slice of a production computer vision system for AI.SEE, Germany.",
+  },
+  {
+    name: "Networking app + mobile builds",
+    period: "2023 - 2024",
+    detail: "Eight months on a networking mobile app, alongside several smaller mobile apps.",
+  },
+  {
+    name: "Taxi platform UI suite",
+    period: "2023",
+    detail: "Full interface for three mobile apps (rider, driver and admin) plus the web admin console.",
+  },
+];
+
 export const timeline = [
   {
     period: "Sep 2023 - Present",
