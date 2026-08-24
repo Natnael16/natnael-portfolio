@@ -98,6 +98,15 @@ export const projects = [
     accent: "violet",
   },
   {
+    name: "Enterprise Search at Elunic",
+    role: "Lead Developer · Germany",
+    period: "2025 - Present",
+    description:
+      "Rebuilt document search inside an established enterprise codebase with BM25 and vector-based retrieval (~92% faster), shipped AI-powered features for internal and client-facing tools, and was promoted to Lead Developer, setting technical direction and reviewing the in-house team's code.",
+    tags: ["Vector search", "BM25", "AI features", "Tech leadership", "Enterprise"],
+    accent: "amber",
+  },
+  {
     name: "QuickSync",
     role: "Software Developer · Dubai, UAE",
     period: "2024 - 2025",
@@ -116,15 +125,6 @@ export const projects = [
     accent: "emerald",
   },
   {
-    name: "Enterprise Search at Elunic",
-    role: "Lead Developer · Germany",
-    period: "2023 - Present",
-    description:
-      "Rebuilt document search inside an established enterprise codebase with BM25 and vector-based retrieval (~92% faster), shipped AI-powered features for internal and client-facing tools, and was promoted to Lead Developer, setting technical direction and reviewing the in-house team's code.",
-    tags: ["Vector search", "BM25", "AI features", "Tech leadership", "Enterprise"],
-    accent: "amber",
-  },
-  {
     name: "RateEat",
     role: "Full-Stack Developer",
     period: "2021",
@@ -137,6 +137,18 @@ export const projects = [
 
 export const timeline = [
   {
+    period: "Oct 2023 - Present",
+    title: "Senior Full-Stack Engineer · Upwork (Freelance)",
+    org: "Clients in Germany, the USA and the UAE",
+    body: "Production systems for international clients across consumer, SaaS and enterprise domains. Top Rated Plus, 100% Job Success, 2,200+ hours. Trusted to independently design, implement and deploy features in live environments. The engagements below sit inside this practice.",
+  },
+  {
+    period: "Oct 2025 - Present",
+    title: "Lead Developer · Elunic",
+    org: "Enterprise Software · Germany",
+    body: "Rebuilt document search with BM25 and vector-based retrieval inside an established enterprise codebase, shipped AI-powered features for internal and client-facing tools, and was promoted to Lead Developer, setting technical direction and reviewing the in-house team's code.",
+  },
+  {
     period: "Apr 2025 - Present",
     title: "Lead Engineer · Adify-AI",
     org: "AI SaaS Product",
@@ -147,12 +159,6 @@ export const timeline = [
     title: "Software Developer · QuickSync",
     org: "Dubai, UAE",
     body: "Built and maintained a high-traffic inventory sync platform for 10,000+ active users across six major e-commerce channels.",
-  },
-  {
-    period: "Oct 2023 - Present",
-    title: "Senior Full-Stack Engineer · Upwork (Freelance)",
-    org: "Elunic (Germany) · KiwiKrave (USA)",
-    body: "Production systems for international clients across consumer, SaaS and enterprise domains. Top Rated Plus, 100% Job Success, 2,200+ hours. Trusted to independently design, implement and deploy features in live environments; promoted to Lead Developer at Elunic.",
   },
   {
     period: "Dec 2022 - Mar 2024",
