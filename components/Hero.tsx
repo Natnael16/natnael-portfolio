@@ -45,7 +45,8 @@ export default function Hero() {
           style={{ animationDelay: "180ms" }}
         >
           I&apos;m {site.shortName}, a {site.role.toLowerCase()} trusted by startups and enterprises in Germany, the
-          USA and the UAE. Web, mobile and AI, designed end-to-end, deployed to real users, and kept fast under load.
+          USA and the UAE. Web systems designed end to end, deployed to real users and kept fast under load, with
+          mobile experience where the product needs it. I use Claude to move fast, and I review every line that ships.
         </p>
 
         <div className="animate-fade-up mt-9 flex flex-wrap items-center gap-4" style={{ animationDelay: "270ms" }}>

@@ -4,7 +4,7 @@ export const site = {
   name: "Natnael Tadele Denbi",
   shortName: "Natnael Tadele",
   role: "Senior Full-Stack Software Engineer",
-  tagline: "I build production web, mobile and AI systems that ship and scale.",
+  tagline: "I build production web systems that ship and scale, with mobile experience where the product needs it.",
   location: "Addis Ababa, Ethiopia · Working worldwide (remote)",
   email: "natnaeldenbi@gmail.com",
   phone: "+251 961 088 592",
@@ -45,14 +45,14 @@ export const services = [
     points: ["RAG & vector search", "OpenAI · Claude · agentic systems", "AI cost & latency optimization"],
   },
   {
-    title: "Mobile Ecosystems",
+    title: "Mobile, Where the Product Needs It",
     icon: "phone",
     description:
-      "Multi-platform Flutter apps backed by real-time APIs: customer apps, merchant dashboards, kiosks and kitchen displays operating as one system.",
+      "Flutter apps riding the same APIs I build on the web: customer apps, merchant dashboards, kiosks and kitchen displays working as one system. Shipped as part of full product builds, not as standalone mobile work.",
     points: ["Flutter / Dart / Bloc", "Real-time sync & maps", "Firebase · Supabase"],
   },
   {
-    title: "Backend & DevOps",
+    title: "Backend & Infrastructure",
     icon: "server",
     description:
       "High-traffic APIs, third-party integrations and infrastructure that stays up: Docker, Kubernetes, CI/CD and AWS, with caching and query optimization baked in.",
@@ -206,7 +206,7 @@ export const skills = [
   },
   {
     group: "AI Engineering",
-    items: ["LLM integration", "RAG pipelines", "Vector search", "BM25", "Agentic systems", "OpenAI", "Claude"],
+    items: ["LLM integration", "RAG pipelines", "Vector search", "BM25", "Agentic systems", "OpenAI", "Claude", "Claude Code"],
   },
   {
     group: "Databases",
@@ -218,7 +218,7 @@ export const skills = [
   },
   {
     group: "Practices",
-    items: ["Microservices", "API design", "Agile / Scrum", "Code review", "Tech leadership", "Mentorship"],
+    items: ["Microservices", "API design", "AI-assisted development", "Code review", "Agile / Scrum", "Tech leadership", "Mentorship"],
   },
 ];
 

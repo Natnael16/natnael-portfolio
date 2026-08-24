@@ -9,7 +9,7 @@ export default function Services() {
         <Reveal>
           <p className="section-kicker">What I do</p>
           <h2 className="font-display mt-3 max-w-xl text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-            Four capabilities, one engineer who owns the whole stack.
+            Full-stack web, end to end. Plus the edges most builds trip on.
           </h2>
         </Reveal>
 

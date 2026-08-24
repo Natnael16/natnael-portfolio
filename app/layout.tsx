@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://natnael.website"),
   title: "Natnael Tadele | Senior Full-Stack & AI Engineer",
   description:
-    "Senior Full-Stack Software Engineer building production web, mobile and AI systems. Top Rated Plus on Upwork with 100% Job Success and 2,200+ hours delivered for clients in Germany, the USA and the UAE.",
+    "Senior Full-Stack Software Engineer building production web systems, with mobile experience where the product needs it. Works with Claude Code and reviews everything that ships. Top Rated Plus on Upwork with 100% Job Success and 2,200+ hours delivered for clients in Germany, the USA and the UAE.",
   keywords: [
     "Full-Stack Developer",
     "AI Engineer",
@@ -18,19 +18,22 @@ export const metadata: Metadata = {
     "Flutter",
     "RAG",
     "LLM",
+    "Claude",
+    "Claude Code",
+    "AI-assisted development",
     "Upwork Top Rated Plus",
   ],
   openGraph: {
     title: "Natnael Tadele | Senior Full-Stack & AI Engineer",
     description:
-      "Production web, mobile & AI systems that ship and scale. Top Rated Plus · 100% Job Success · 2,200+ hours on Upwork.",
+      "Production web systems that ship and scale, with mobile experience. Claude Code in the loop, senior review on everything. Top Rated Plus · 100% Job Success · 2,200+ hours on Upwork.",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
     title: "Natnael Tadele | Senior Full-Stack & AI Engineer",
     description:
-      "Production web, mobile & AI systems that ship and scale. Top Rated Plus · 100% Job Success · 2,200+ hours on Upwork.",
+      "Production web systems that ship and scale, with mobile experience. Claude Code in the loop, senior review on everything. Top Rated Plus · 100% Job Success · 2,200+ hours on Upwork.",
   },
 };
 

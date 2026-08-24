@@ -17,6 +17,10 @@ const QUIPS = [
 
 const HOW_I_WORK = [
   {
+    title: "Claude in the loop, judgment on top",
+    body: "I use Claude Code for scaffolding, tests and refactors, which is a large part of why I move fast. Nothing reaches a branch I have not read, reasoned about and can defend in review.",
+  },
+  {
     title: "Green build or it does not ship",
     body: "Every change goes out behind a passing pipeline. No manual steps, no fingers crossed.",
   },
