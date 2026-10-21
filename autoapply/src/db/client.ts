@@ -7,7 +7,7 @@ import { config } from "../config.js";
 import * as schema from "./schema.js";
 import { companies, profile } from "./schema.js";
 import { nowIso } from "../lib/time.js";
-import { defaultProfile } from "../lib/profile.js";
+import { candidateProfile } from "../lib/profile.js";
 
 const sqlite = new Database(config.dbPath);
 sqlite.pragma("journal_mode = WAL");
@@ -158,7 +158,7 @@ function seed() {
     db.insert(profile)
       .values({
         id: 1,
-        json: JSON.stringify(defaultProfile()),
+        json: JSON.stringify(candidateProfile()),
         updatedAt: nowIso(),
       })
       .run();

@@ -68,6 +68,14 @@ function tokens(s: string): Set<string> {
   );
 }
 
+/** Whole-word match, so "intern" does not catch "Internal Tools" and "ios" does not catch "Studios". */
+export function titleHasKeyword(title: string, keyword: string): boolean {
+  const kw = keyword.trim().toLowerCase();
+  if (!kw) return false;
+  const escaped = kw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[^a-z0-9])${escaped}($|[^a-z0-9])`).test(title.toLowerCase());
+}
+
 export function titlesOverlap(jobTitle: string, targetTitles: string[]): boolean {
   if (targetTitles.length === 0) return true;
   const job = tokens(jobTitle);
@@ -131,11 +139,9 @@ export function hardFilter(
     return { skip: true, reason: `Employment type ${job.employmentType}` };
   }
 
-  const title = job.title.toLowerCase();
   for (const raw of profile.excludeKeywords) {
-    const kw = raw.trim().toLowerCase();
-    if (kw && title.includes(kw)) {
-      return { skip: true, reason: `Excluded keyword: ${raw}` };
+    if (titleHasKeyword(job.title, raw)) {
+      return { skip: true, reason: `Excluded keyword: ${raw.trim()}` };
     }
   }
 

@@ -15,7 +15,7 @@ You receive the **full form**: every field with `prompt` (verbatim label from th
 - **Answer `prompt`.** If it says “Please share some details about your proudest Android feature in 2 to 3 sentences. What made it challenging and what was the impact?”, write that — length, Android, challenge, impact. Do not write a generic `highlight` essay.
 - **`concept` is which skill/playbook to use** (STAR shape, canned work-auth mapping, cover-letter shape). It is not the question.
 - **Every field** in `form.fields` gets an answer object (value or null). Do not drop fields. `prefilled` on identity fields is already correct — keep it.
-- If the resume PDF **or** `candidate/*.md` master profile has the fact, **fill the field**. The markdown is the extended source of truth. If a yes/no is in neither file, answer **No** and fill. Empty only for optional EEO, no referral, or a named SDK that is not in either file. Remote salary is `profile.salaryBand` (2000-2500 USD per month).
+- If the resume PDF **or** `candidate/*.md` master profile has the fact, **fill the field**. The markdown is the extended source of truth. If a yes/no is in neither file, answer **No** and fill. Empty only for optional EEO, no referral, or a named SDK that is not in either file. Remote salary is `profile.salaryBand`; when it is empty, leave salary null and flag it.
 
 Load **fill-widgets** for how to serialize. Load **wording** for any value longer than ~30 words.
 

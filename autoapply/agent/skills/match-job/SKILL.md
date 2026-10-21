@@ -34,7 +34,7 @@ After hard filters have already dropped non-remote, excluded, and duplicate post
 
 - Invent experience, seniority, or tools not in the resume PDF or master profile markdown
 - Match Senior / Staff / Principal / Distinguished roles when `seniorityBand` is `junior` or `mid`
-- Match a posting whose required experience is above `maxRoleYears` (when set) or above about 3 years for a mid profile with ~2 years of work
+- Match a posting whose required experience is above `maxRoleYears` (when set)
 - Treat keyword overlap as evidence without a real project or job behind it
 - Send to inbox with an empty `evidence` array
 - Override hard logistics contradictions (visa, on-site-only already filtered, “must live / reside / be based in X country or region” vs profile location)
@@ -50,9 +50,9 @@ These are different:
 ## Seniority and years
 
 - `junior` / `mid` profile → skip Senior, Staff, Principal, Sr., Distinguished, Fellow titles and JDs written for that bar
-- If `maxRoleYears` is set (this candidate: **3**), skip when the JD requires more than that (`4+ years`, `5+ years`, `at least 6 years`, `4-8 years`)
-- `3+ years` or `2-3 years` can stay in play for a mid profile with ~2 years; still name the years gap
-- Do not call the candidate senior, staff, or a tech lead
+- If `maxRoleYears` is set, skip when the JD requires more than that (with `maxRoleYears` 3: skip `4+ years`, `5+ years`, `at least 6 years`, `4-8 years`)
+- A requirement one year above `yearsExperience` can stay in play when the evidence is strong; still name the years gap
+- Describe the candidate at `profile.seniorityBand`. Use "tech lead" or "lead" only when the resume or master profile shows that title
 
 ## Decision rules
 

@@ -1,5 +1,4 @@
 import type { Profile } from "../lib/profile.js";
-import { REMOTE_MONTHLY_SALARY_USD } from "../lib/profile.js";
 import { isConsentPrompt, isMarketingOptInPrompt, shouldTickConsent } from "../lib/consent.js";
 import type { ApplyField, FieldAnswer, NormalizedJob } from "../sources/types.js";
 
@@ -146,13 +145,14 @@ function wantsAnnualPay(label: string): boolean {
 function salaryAmounts(
   band: string,
   annual: boolean,
-): { min: number; max: number; monthly: boolean } {
+): { min: number; max: number; monthly: boolean } | null {
   const nums = [...band.matchAll(/(\d[\d,]*)/g)]
     .map((m) => Number(m[1].replace(/,/g, "")))
     .filter((n) => n > 0);
-  const monthlyBand = /month|\/mo|monthly/i.test(band) || (nums[0] ?? 0) <= 10_000;
-  const min = nums[0] ?? REMOTE_MONTHLY_SALARY_USD.min;
-  const max = nums[1] ?? nums[0] ?? REMOTE_MONTHLY_SALARY_USD.max;
+  if (!nums.length) return null;
+  const monthlyBand = /month|\/mo|monthly/i.test(band) || nums[0] <= 10_000;
+  const min = nums[0];
+  const max = nums[1] ?? nums[0];
   if (monthlyBand && annual) return { min: min * 12, max: max * 12, monthly: false };
   if (!monthlyBand && !annual && min > 10_000) return { min, max, monthly: false };
   return { min, max, monthly: monthlyBand && !annual };
@@ -191,6 +191,7 @@ function salaryAnswer(
   if (!roleIsRemote(job)) return null;
   const annual = wantsAnnualPay(field.label);
   const amt = salaryAmounts(band, annual);
+  if (!amt) return null;
   const path = field.path;
   const label = field.label;
   let value: string | null = null;

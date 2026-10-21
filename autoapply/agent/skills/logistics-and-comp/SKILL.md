@@ -62,10 +62,10 @@ Do not skip or contradict a Yes on hours just because the home city is Addis Aba
 
 ## Salary (`salary`)
 
-`profile.salaryBand` only. For this candidate’s **remote** roles that is **2000-2500 USD per month**.
+`profile.salaryBand` only, for **remote** roles. It reads like `X-Y USD per month` or `X-Y USD per year`.
 
-- Text: `2000-2500 USD per month`. If the prompt asks for annual / per year, emit `24000-30000 USD per year`.
-- Number: monthly min `2000`, max `2500`; annual min `24000`, max `30000`.
+- Text: emit the band as written. If the prompt asks for the other period, convert it (monthly × 12 = annual, annual ÷ 12 = monthly).
+- Number: min is the lower bound, max the upper bound, in the period the prompt asks for.
 - Select: pick the bucket that contains that range. Overlap across two buckets → flag.
 - On-site / hybrid office jobs: do not paste the remote monthly band.
 - Current compensation: `cannedAnswers.currentSalary` only.
@@ -73,9 +73,9 @@ Do not skip or contradict a Yes on hours just because the home city is Addis Aba
 
 ## Availability (`availability`)
 
-- Notice: map `noticePeriod` to **exact** option. This profile is **1 week**. Prefer `1 week` / `one week` / `7 days`. If the select has no 1-week option, pick the shortest option that is still at least 1 week (e.g. 2 weeks). Never pick “I can start immediately” or “ASAP” unless the profile says so.
+- Notice: map `profile.noticePeriod` to the **exact** option (for `1 week` prefer `1 week` / `one week` / `7 days`). If the select has no exact option, pick the shortest option that is still at least the notice period. Never pick “I can start immediately” or “ASAP” unless the profile says so.
 - Start date: `profile.earliestStart` as `YYYY-MM-DD` when the widget is a date (or a text date).
-- Number field for notice days: `7` when noticePeriod is 1 week.
+- Number field for notice days: the notice period in days (`7` for 1 week, `14` for 2 weeks).
 - Hours / timezone overlap: Yes when `timezoneFlexible` is true.
 
 ## Self-check

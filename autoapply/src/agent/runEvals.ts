@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import { identityAnswer } from "./draft.js";
 import { prefillAnswer } from "./prefill.js";
 import { applyCritique, critiqueAfterFixes, localCritique, proseIssues, rewriteProse } from "./critique.js";
@@ -9,7 +10,7 @@ import { applyUrlCandidates, applicationLooksSubmitted, applyFormStillOpen, ashb
 import { draftApplication } from "./draft.js";
 import { isModelConfigured, parseJsonObject } from "./model.js";
 import { loadSkill } from "./loader.js";
-import { candidateAgentSources } from "../lib/resumeFile.js";
+import { CANDIDATE_PROFILE_MD, candidateAgentSources } from "../lib/resumeFile.js";
 import type { ApplyField, DraftResult, FieldAnswer, MatchResult } from "../sources/types.js";
 import {
   evalProfile,
@@ -54,14 +55,15 @@ function runHardFilters(): number {
 }
 
 function runCandidateSources(): number {
-  const { resumePdf, masterProfile } = candidateAgentSources("PDF EXTRACT\n\n");
-  if (masterProfile.length < 40_000) {
-    return fail("SRC-md", `master profile too short: ${masterProfile.length}`);
+  if (!fs.existsSync(CANDIDATE_PROFILE_MD)) {
+    return fail("SRC-md", `no master profile at ${CANDIDATE_PROFILE_MD}`);
   }
-  if (!/# 14\. Distributed Systems/.test(masterProfile) || !/# 31\. Example Answers/.test(masterProfile)) {
-    return fail("SRC-md", "master profile missing later sections");
+  const onDisk = fs.readFileSync(CANDIDATE_PROFILE_MD, "utf8");
+  const { resumePdf, masterProfile } = candidateAgentSources(`PDF EXTRACT\n\n${onDisk}`);
+  if (masterProfile !== onDisk) {
+    return fail("SRC-md", `master profile was cut: ${masterProfile.length} of ${onDisk.length} chars`);
   }
-  if (/# 31\. Example Answers/.test(resumePdf)) {
+  if (resumePdf !== "PDF EXTRACT") {
     return fail("SRC-split", "pdf extract should not include the markdown");
   }
   return ok("SRC-md", `${masterProfile.length} chars, full markdown`);

@@ -1,11 +1,25 @@
 import fs from "node:fs";
 import path from "node:path";
 import { extractText, getDocumentProxy } from "unpdf";
+import "../config.js";
 
 export const CANDIDATE_RESUME_PDF = path.resolve("candidate/resume.pdf");
-export const CANDIDATE_PROFILE_MD = path.resolve(
-  "candidate/Zerihun_Getu_Application_Master_Profile.md",
-);
+
+/** `CANDIDATE_PROFILE_MD` if set, else the first markdown file in candidate/ (README.md aside). */
+function findProfileMarkdown(): string {
+  const explicit = process.env.CANDIDATE_PROFILE_MD;
+  if (explicit) return path.resolve(explicit);
+  const dir = path.resolve("candidate");
+  const found = fs.existsSync(dir)
+    ? fs
+        .readdirSync(dir)
+        .filter((f) => f.endsWith(".md") && f.toLowerCase() !== "readme.md")
+        .sort()[0]
+    : undefined;
+  return path.join(dir, found ?? "profile.md");
+}
+
+export const CANDIDATE_PROFILE_MD = findProfileMarkdown();
 
 export async function extractPdfText(filePath: string): Promise<string> {
   const buf = fs.readFileSync(filePath);
@@ -62,7 +76,7 @@ export function candidateSourcePayload(combinedResumeText: string) {
   const { resumePdf, masterProfile } = candidateAgentSources(combinedResumeText);
   return {
     sourceNote:
-      "Two candidate files, both required. resumePdf is candidate/resume.pdf (short). masterProfile is candidate/Zerihun_Getu_Application_Master_Profile.md (full extended profile: queues, retries, Redis, education, example answers). Treat masterProfile as equal to the PDF, not optional. If a yes/no is in neither file, answer No and fill the field. Do not invent employers, titles, or that you operated SMTP/MTAs.",
+      `Two candidate files, both required. resumePdf is candidate/resume.pdf (short). masterProfile is candidate/${path.basename(CANDIDATE_PROFILE_MD)} (full extended profile: experience detail, logistics, answering rules). Treat masterProfile as equal to the PDF, not optional. If a yes/no is in neither file, answer No and fill the field. Do not invent employers, titles, tools, or metrics.`,
     resumePdf,
     masterProfile,
   };

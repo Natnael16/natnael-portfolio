@@ -111,7 +111,7 @@ export async function draftApplication(args: {
     user: JSON.stringify(
       {
         instruction:
-          "Fill every required prompt from resumePdf AND masterProfile. masterProfile is candidate/Zerihun_Getu_Application_Master_Profile.md and is not optional. If a yes/no is in neither file, answer No. If the prompt lists SMTP or MTAs, use queues/retries/Redis from masterProfile and say those mail systems are not in the files. Remote salary is profile.salaryBand (2000-2500 USD per month; annualize if the prompt asks for a year). Empty only for optional EEO, no referral, or a named SDK that is not in either file.",
+          "Fill every required prompt from resumePdf AND masterProfile. masterProfile is the candidate/*.md extended profile and is not optional. If a yes/no is in neither file, answer No. Remote salary is profile.salaryBand (convert month/year if the prompt asks for the other period); if it is empty, leave salary null and flag it. Empty only for optional EEO, no referral, or a named SDK that is not in either file.",
         profile: args.profile,
         ...candidateSourcePayload(args.resumeText),
         job: args.job,

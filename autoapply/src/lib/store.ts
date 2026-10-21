@@ -3,7 +3,7 @@ import path from "node:path";
 import { eq } from "drizzle-orm";
 import { db } from "../db/client.js";
 import { profile as profileTable } from "../db/schema.js";
-import { defaultProfile, REMOTE_MONTHLY_SALARY_USD, type Profile } from "./profile.js";
+import { defaultProfile, type Profile } from "./profile.js";
 import {
   CANDIDATE_PROFILE_MD,
   CANDIDATE_RESUME_PDF,
@@ -26,9 +26,7 @@ function mergeProfile(json: string): Profile {
   const parsed = { ...defaults, ...(JSON.parse(json) as Partial<Profile>) };
   if (!parsed.noticePeriod) parsed.noticePeriod = defaults.noticePeriod;
   if (parsed.maxRoleYears == null) parsed.maxRoleYears = defaults.maxRoleYears;
-  if (!parsed.salaryBand && parsed.remoteOnly) {
-    parsed.salaryBand = REMOTE_MONTHLY_SALARY_USD.band;
-  }
+  if (!Array.isArray(parsed.eligibleRegions)) parsed.eligibleRegions = defaults.eligibleRegions;
   if (parsed.seniorityBand === "junior" || parsed.seniorityBand === "mid") {
     parsed.targetTitles = parsed.targetTitles.filter(
       (t) => !/\b(senior|staff|principal)\b/i.test(t),

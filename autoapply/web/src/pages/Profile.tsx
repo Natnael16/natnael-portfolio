@@ -71,6 +71,14 @@ export function Profile() {
         />
       </label>
       <label className="field">
+        Regions you can work from (remote jobs limited to anywhere else are skipped)
+        <input
+          placeholder="Worldwide, Anywhere, EMEA, Africa, Ethiopia"
+          value={Array.isArray(current.eligibleRegions) ? (current.eligibleRegions as string[]).join(", ") : ""}
+          onChange={(e) => set("eligibleRegions", e.target.value.split(",").map((s) => s.trim()).filter(Boolean))}
+        />
+      </label>
+      <label className="field">
         Employment types
         <input
           value={Array.isArray(profile.employmentTypes) ? (profile.employmentTypes as string[]).join(", ") : ""}
@@ -108,9 +116,9 @@ export function Profile() {
           <input value={str("workAuthorization")} onChange={(e) => set("workAuthorization", e.target.value)} />
         </label>
         <label className="field">
-          Salary band (remote roles: 2000-2500 USD/month)
+          Salary band for remote roles (empty = flag salary questions for you)
           <input
-            placeholder="2000-2500 USD per month"
+            placeholder="e.g. 5000-6500 USD per month"
             value={str("salaryBand")}
             onChange={(e) => set("salaryBand", e.target.value)}
           />

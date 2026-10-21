@@ -33,6 +33,11 @@ export type Profile = {
   remoteOnly: boolean;
   /** Can work any timezone, including US hours. Do not skip jobs only for TZ overlap. */
   timezoneFlexible: boolean;
+  /**
+   * Regions a remote posting may be limited to and still be open to you ("Worldwide", "EMEA",
+   * "Africa", your country). A posting limited to somewhere else is skipped. Empty = no check.
+   */
+  eligibleRegions: string[];
   willingToRelocate: string;
   salaryBand: string;
   noticePeriod: string;
@@ -47,13 +52,6 @@ export type Profile = {
   attestTruth: boolean;
   exportControl: string;
   cannedAnswers: Record<string, string>;
-};
-
-/** Canned remote-role expectation. Not for on-site bands. */
-export const REMOTE_MONTHLY_SALARY_USD = {
-  min: 2000,
-  max: 2500,
-  band: "2000-2500 USD per month",
 };
 
 export function defaultProfile(): Profile {
@@ -95,6 +93,7 @@ export function defaultProfile(): Profile {
     visaType: "",
     remoteOnly: true,
     timezoneFlexible: true,
+    eligibleRegions: [],
     willingToRelocate: "",
     salaryBand: "",
     noticePeriod: "1 week",
@@ -112,58 +111,104 @@ export function defaultProfile(): Profile {
   };
 }
 
+/** The operator: Natnael Tadele. Facts mirror candidate/resume.pdf and natnael.website. */
 export function candidateProfile(): Profile {
   return {
     ...defaultProfile(),
-    name: "Zerihun Getu",
-    email: "zerihunmogesgetu@gmail.com",
+    name: "Natnael Tadele Denbi",
+    email: "natnaeldenbi@gmail.com",
+    phone: "+251 961 088 592",
     location: "Addis Ababa, Ethiopia",
     timezone: "Africa/Addis_Ababa",
     timezoneFlexible: true,
-    linkedin: "https://linkedin.com/in/zerihungetu",
-    github: "https://github.com/zerihunMoges",
+    eligibleRegions: ["Worldwide", "Anywhere", "Global", "EMEA", "Africa", "Ethiopia"],
+    linkedin: "https://www.linkedin.com/in/natnael-tadele-b3534b230",
+    github: "https://github.com/Natnael16",
+    portfolio: "https://natnael.website",
+    website: "https://natnael.website",
     targetTitles: [
+      "Senior Full Stack Engineer",
+      "Full Stack Engineer",
+      "Senior Software Engineer",
       "Software Engineer",
       "Backend Engineer",
-      "Full Stack Engineer",
+      "AI Engineer",
+      "LLM Engineer",
       "Product Engineer",
+      "Founding Engineer",
+      "Lead Developer",
     ],
     excludeKeywords: [
-      ...defaultProfile().excludeKeywords,
-      "senior",
-      "staff",
+      "sales",
+      "recruiter",
+      "account executive",
+      "unpaid",
+      "intern",
+      "designer",
+      "marketing",
+      "support",
+      "relations",
+      "advocate",
+      "director",
       "principal",
-      "field",
+      "distinguished",
+      "engineering manager",
+      "vp",
+      "android",
+      "ios",
+      "embedded",
+      "firmware",
+      "data scientist",
+      "qa",
     ],
+    employmentTypes: ["FullTime", "Contract"],
     skills: [
-      "Python",
-      "Django",
       "TypeScript",
       "JavaScript",
+      "Python",
+      "Node.js",
+      "NestJS",
+      "Django",
+      "Flask",
       "React",
       "Next.js",
-      "Node.js",
+      "Flutter",
+      "Dart",
       "PostgreSQL",
-      "Redis",
-      "Docker",
+      "MongoDB",
+      "MySQL",
+      "Supabase",
+      "Firebase",
       "AWS",
+      "Docker",
+      "Kubernetes",
+      "CI/CD",
+      "LLM",
+      "RAG",
+      "Vector search",
+      "OpenAI",
+      "Claude",
+      "Shopify",
+      "REST APIs",
+      "Microservices",
     ],
-    yearsExperience: 2,
-    maxRoleYears: 3,
-    seniorityBand: "mid",
-    noticePeriod: "1 week",
+    yearsExperience: 4,
+    maxRoleYears: 5,
+    seniorityBand: "senior",
+    workAuthorization:
+      "Based in Addis Ababa, Ethiopia. Works remotely as an independent contractor. No US, UK, EU or Canadian work authorization is claimed.",
+    requiresSponsorship: false,
     education: [
       {
         schoolName: "Addis Ababa University",
-        degree: "Bachelor of Software Engineering",
+        degree: "BSc Software Engineering",
         field: "Software Engineering",
-        startDate: "2019-09",
-        endDate: "2024-07",
+        startDate: "2019-10",
+        endDate: "2024-06",
         isCurrent: false,
       },
     ],
-    educationSummary: "BSc Software Engineering, Addis Ababa University, CGPA 3.75/4.0 (2019–2024)",
-    salaryBand: REMOTE_MONTHLY_SALARY_USD.band,
+    educationSummary: "BSc Software Engineering, Addis Ababa University (2019–2024)",
     remoteOnly: true,
   };
 }
