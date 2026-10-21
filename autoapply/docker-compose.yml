@@ -1,0 +1,30 @@
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      DATA_DIR: /app/data
+      PORT: "3000"
+      GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/vertex.json
+    volumes:
+      - ./data:/app/data
+      - ./agent:/app/agent
+      - ./secrets:/var/secrets:ro
+    restart: unless-stopped
+
+  worker:
+    build: .
+    command: ["node", "dist/worker.js"]
+    env_file:
+      - .env
+    environment:
+      DATA_DIR: /app/data
+      GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/vertex.json
+    volumes:
+      - ./data:/app/data
+      - ./agent:/app/agent
+      - ./secrets:/var/secrets:ro
+    restart: unless-stopped

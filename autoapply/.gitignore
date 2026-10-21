@@ -1,0 +1,42 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependencies
+node_modules
+
+# Build
+dist
+web/dist
+
+# Env and local state
+.env
+.env.local
+secrets/
+# Google Cloud service-account keys (never commit)
+adify-new-*.json
+gcp-service-account.json
+*-service-account.json
+data/*.db
+data/*.db-wal
+data/*.db-shm
+data/uploads/
+data/screenshots/
+data/logs/
+data/test-reports/
+data/browser-profile/
+data/chrome-user-data/
+data/submit-state.json
+
+# OS / editor
+.DS_Store
+*.swp
+.idea
+.vscode
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

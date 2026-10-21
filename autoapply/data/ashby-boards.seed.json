@@ -1,0 +1,14 @@
+[
+  { "slug": "linear", "name": "Linear" },
+  { "slug": "notion", "name": "Notion" },
+  { "slug": "ramp", "name": "Ramp" },
+  { "slug": "openai", "name": "OpenAI" },
+  { "slug": "anthropic", "name": "Anthropic" },
+  { "slug": "cursor", "name": "Cursor" },
+  { "slug": "ashby", "name": "Ashby" },
+  { "slug": "posthog", "name": "PostHog" },
+  { "slug": "vanta", "name": "Vanta" },
+  { "slug": "resend", "name": "Resend" },
+  { "slug": "elevenlabs", "name": "ElevenLabs" },
+  { "slug": "cohere", "name": "Cohere" }
+]
