@@ -27,6 +27,13 @@ function env(name: string, fallback = ""): string {
   return process.env[name] ?? fallback;
 }
 
+function list(name: string, fallback: string): string[] {
+  return env(name, fallback)
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 const dataDir = path.resolve(env("DATA_DIR", "./data"));
 
 fs.mkdirSync(path.join(dataDir, "uploads"), { recursive: true });
@@ -68,4 +75,19 @@ export const config = {
   submitSpamCooldownMs: Math.max(120_000, Number(env("SUBMIT_SPAM_COOLDOWN_MS", "1200000"))),
   /** Matches at or above this score wait in Inbox. Below it (and ≥ MATCH_THRESHOLD) auto-apply. */
   reviewMinScore: Number(env("REVIEW_MIN_SCORE", "90")),
+  /** Queue auto-submit matches right after each scan instead of waiting for "Start auto apply". */
+  autoSubmitAfterRun: env("AUTO_SUBMIT_AFTER_RUN", "false").toLowerCase() === "true",
+  /** Crawl for new Ashby boards on every scan. Slow; the boards already found keep being read either way. */
+  ashbyDiscovery: env("ASHBY_DISCOVERY", "true").toLowerCase() !== "false",
+  /** Cross-company job feeds read on every scan. See src/sources/feeds. */
+  feeds: list("FEEDS", "remotive,weworkremotely,himalayas,jobicy,remoteok,linkedin").map((s) => s.toLowerCase()),
+  /** Search phrases for LinkedIn. Empty = the first three profile target titles. */
+  linkedinSearches: list("LINKEDIN_SEARCHES", "full stack engineer,senior software engineer,ai engineer"),
+  /** LinkedIn location filter, one search per entry. */
+  linkedinLocations: list("LINKEDIN_LOCATIONS", "Worldwide,EMEA"),
+  linkedinPagesPerSearch: Math.max(1, Number(env("LINKEDIN_PAGES_PER_SEARCH", "2"))),
+  /** Detail pages fetched per run. Each one is a request to LinkedIn, so keep this small. */
+  linkedinMaxDetails: Math.max(0, Number(env("LINKEDIN_MAX_DETAILS", "30"))),
+  /** Skip postings whose scam score falls below this (0-100). */
+  legitMinScore: Number(env("LEGIT_MIN_SCORE", "50")),
 };

@@ -44,7 +44,9 @@ export function Runs() {
         </button>
       </div>
       <p className="muted small">
-        Each scan discovers boards and drafts close (~50%+) matches into Inbox.
+        Each scan reads the job feeds (remote boards, LinkedIn) and company boards, drops scams and
+        roles you cannot work from, and puts close (~50%+) matches in Inbox. Ashby matches are drafted;
+        the rest are listed under Apply yourself.
         The agent rewrites a bad critique and fills empty fields from the résumé before tagging.
         90%+ wait for your Approve. 50–89% are tagged auto-submit until you click Start auto apply.
       </p>

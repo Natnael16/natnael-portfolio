@@ -1,5 +1,10 @@
 export type Job = {
   id: number;
+  source: string;
+  sourceLabel: string;
+  /** False for feeds and boards the agent cannot submit to: you apply from the link. */
+  canAutoApply: boolean;
+  publishedAt: string | null;
   title: string;
   companyName: string;
   companySlug: string;
@@ -43,6 +48,7 @@ export type Application = {
     evidence?: string[];
     gaps?: string[];
     skipReason?: string | null;
+    legit?: { score: number; flags: Array<{ severity: string; reason: string }> };
   } | null;
   form: { fields?: FormField[]; pageUrl?: string } | null;
   answers: Answer[];
@@ -77,7 +83,13 @@ export const api = {
     req("/api/login", { method: "POST", body: JSON.stringify({ password }) }),
   logout: () => req("/api/logout", { method: "POST" }),
   inbox: () =>
-    req<{ items: Application[]; autoCount: number; reviewCount: number; queuedCount: number }>("/api/inbox"),
+    req<{
+      items: Application[];
+      autoCount: number;
+      reviewCount: number;
+      manualCount: number;
+      queuedCount: number;
+    }>("/api/inbox"),
   history: (status?: "submitted" | "failed") =>
     req<{ items: Application[] }>(`/api/history${status ? `?status=${status}` : ""}`),
   application: (id: number) => req<Application>(`/api/applications/${id}`),

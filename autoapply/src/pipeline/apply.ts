@@ -8,7 +8,7 @@ import { nowIso } from "../lib/time.js";
 import { assertSubmitAllowed, closeSubmitChrome, recordSubmitResult } from "../lib/chromeSubmit.js";
 import { autoApplyDecision } from "./autoApply.js";
 import { isAlreadySentSubmitError, nextStatusAfterSubmitFail } from "./submitGuard.js";
-import { getSource } from "../sources/registry.js";
+import { canAutoApply, getSource, sourceLabel } from "../sources/registry.js";
 import type { ApplyField, CritiqueResult, DraftFlag, FieldAnswer, SubmitResult } from "../sources/types.js";
 
 const STALE_SUBMIT_MS = 15 * 60_000;
@@ -86,6 +86,13 @@ function alreadySubmittedSameJob(jobId: number, applicationId: number): boolean 
 export async function submitApproved(applicationId: number): Promise<{ ok: boolean; error?: string }> {
   const app = db.select().from(applications).where(eq(applications.id, applicationId)).get();
   if (!app) return { ok: false, error: "Application not found" };
+  const jobSource = db.select({ source: jobs.source }).from(jobs).where(eq(jobs.id, app.jobId)).get()?.source;
+  if (jobSource && !canAutoApply(jobSource)) {
+    return {
+      ok: false,
+      error: `The agent cannot submit ${sourceLabel(jobSource)} applications. Open the posting, apply, then use Mark applied.`,
+    };
+  }
   if (app.status === "submitted" || app.submittedAt) {
     if (app.status !== "submitted") {
       db.update(applications)
@@ -229,7 +236,9 @@ export async function submitApproved(applicationId: number): Promise<{ ok: boole
 
   let result: SubmitResult;
   try {
-    result = await getSource(job.source).submitApplication(
+    const source = getSource(job.source);
+    if (!source.submitApplication) throw new Error(`${job.source} has no submit adapter`);
+    result = await source.submitApplication(
       {
         source: job.source,
         sourceJobId: job.sourceJobId,

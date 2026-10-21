@@ -1,11 +1,15 @@
 import { eq } from "drizzle-orm";
+import { config } from "../config.js";
 import { db } from "../db/client.js";
 import { runs } from "../db/schema.js";
 import { nowIso } from "../lib/time.js";
+import { startAutoApplyBatch } from "./apply.js";
 import { discoverAndStoreBoards } from "./discover.js";
+import type { DiscoverStats } from "../sources/ashbyDiscover.js";
+import { ingestFeeds } from "./feeds.js";
 import { ingestBoards, type IngestStats } from "./ingest.js";
-import { notifyPending, countPending } from "./notify.js";
-import { processNewJobs, type ProcessStats } from "./process.js";
+import { notifyRunDigest, countPending } from "./notify.js";
+import { emptyProcessStats, processNewJobs, type ProcessStats } from "./process.js";
 import { syncCandidateResume } from "../lib/store.js";
 
 let starting = false;
@@ -25,33 +29,28 @@ function sumIngest(a: IngestStats, b: IngestStats): IngestStats {
 }
 
 function sumProcess(a: ProcessStats, b: ProcessStats): ProcessStats {
-  return {
-    considered: a.considered + b.considered,
-    skipped: a.skipped + b.skipped,
-    matched: a.matched + b.matched,
-    drafted: a.drafted + b.drafted,
-    pending: a.pending + b.pending,
-    failed: a.failed + b.failed,
-    retried: a.retried + b.retried,
-    alreadyScanned: a.alreadyScanned + b.alreadyScanned,
-    tooOld: a.tooOld + b.tooOld,
-    queuedAuto: a.queuedAuto + b.queuedAuto,
-  };
+  const out = emptyProcessStats();
+  for (const key of Object.keys(out) as Array<keyof ProcessStats>) out[key] = a[key] + b[key];
+  return out;
 }
 
 async function executeRun(runId: number): Promise<void> {
-  const pendingBefore = countPending();
+  const startedAt = nowIso();
   try {
     await syncCandidateResume();
-    const ingestKnown = await ingestBoards();
-    const processedKnown = await processNewJobs();
-    const discover = await discoverAndStoreBoards();
-    const ingestNew = await ingestBoards();
-    const processedNew = await processNewJobs();
-    const ingest = sumIngest(ingestKnown, ingestNew);
-    const processed = sumProcess(processedKnown, processedNew);
+    // Feeds first: an apply link that points at Ashby/Greenhouse/Lever registers that board,
+    // so the board ingest right after already reads it.
+    const feeds = await ingestFeeds();
+    let ingest = await ingestBoards();
+    let processed = await processNewJobs();
+    let discover: DiscoverStats | null = null;
+    if (config.ashbyDiscovery) {
+      discover = await discoverAndStoreBoards();
+      ingest = sumIngest(ingest, await ingestBoards());
+      processed = sumProcess(processed, await processNewJobs());
+    }
     const pendingAfter = countPending();
-    const stats = { discover, ingest, processed, pending: pendingAfter };
+    const stats = { feeds, discover, ingest, processed, pending: pendingAfter };
     db.update(runs)
       .set({
         status: "ok",
@@ -60,8 +59,8 @@ async function executeRun(runId: number): Promise<void> {
       })
       .where(eq(runs.id, runId))
       .run();
-    const created = pendingAfter - pendingBefore;
-    if (created > 0) await notifyPending(created);
+    await notifyRunDigest(startedAt).catch((err) => console.error("notify failed", err));
+    if (config.autoSubmitAfterRun) startAutoApplyBatch();
     console.log(`run ${runId} ok`, stats);
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);

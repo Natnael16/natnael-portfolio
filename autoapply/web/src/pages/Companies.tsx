@@ -81,6 +81,8 @@ export function Companies() {
         Every public Ashby board we can verify is stored and scanned. There is no company cap.
         Discovery pulls Wayback, Common Crawl, URLScan, HN, YC name guesses, careers embeds, and{" "}
         <code>company.ashbyhq.com</code> hosts, then keeps only slugs that return 200 on Ashby’s posting API.
+        Greenhouse and Lever boards are added automatically when a LinkedIn or remote-board posting applies
+        through them, or paste a board link below.
       </p>
       <p className="muted small">
         {enabledCount} enabled / {total} boards
@@ -105,7 +107,7 @@ export function Companies() {
       </div>
       <form className="row" onSubmit={add} style={{ marginBottom: 12 }}>
         <input
-          placeholder="slug, jobs.ashbyhq.com/…, or company.ashbyhq.com"
+          placeholder="Ashby slug, or a jobs.ashbyhq.com / boards.greenhouse.io / jobs.lever.co link"
           value={slug}
           onChange={(e) => setSlug(e.target.value)}
         />

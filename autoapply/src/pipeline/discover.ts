@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "../db/client.js";
 import { companies, jobs } from "../db/schema.js";
 import { humanizeSlug, normalizeAshbySlug } from "../lib/ashbySlug.js";
@@ -25,11 +25,12 @@ export async function discoverAndStoreBoards(opts?: {
   discovering = true;
   const createdAt = nowIso();
   try {
-    const existing = db.select().from(companies).all();
+    // Only Ashby rows: Greenhouse and Lever slugs follow their own rules.
+    const existing = db.select().from(companies).where(eq(companies.source, "ashby")).all();
     for (const row of existing) {
       const slug = normalizeAshbySlug(row.slug);
       if (!slug || slug !== row.slug.toLowerCase()) {
-        db.delete(jobs).where(eq(jobs.companySlug, row.slug)).run();
+        db.delete(jobs).where(and(eq(jobs.source, "ashby"), eq(jobs.companySlug, row.slug))).run();
         db.delete(companies).where(eq(companies.id, row.id)).run();
         continue;
       }

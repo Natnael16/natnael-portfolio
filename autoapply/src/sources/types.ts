@@ -57,11 +57,42 @@ export type SubmitResult = {
   screenshotPath?: string;
 };
 
+/**
+ * How much the place a job was listed vouches for the employer.
+ * ats: the company's own careers system. curated: a remote board that reviews postings.
+ * open: anyone can post (LinkedIn), so scam checks matter most.
+ */
+export type SourceTrust = "ats" | "curated" | "open";
+
+/** A per-company careers board (Ashby, Greenhouse, Lever). */
 export interface JobSource {
   id: string;
   listJobs(board: BoardRef): Promise<NormalizedJob[]>;
-  extractApplyForm(job: NormalizedJob): Promise<ApplyForm>;
-  submitApplication(job: NormalizedJob, payload: ApplyPayload): Promise<SubmitResult>;
+  /**
+   * Only sources the agent can fill and submit implement these two. Matches from any other
+   * source land in "Apply yourself" with the link instead of being drafted.
+   */
+  extractApplyForm?(job: NormalizedJob): Promise<ApplyForm>;
+  submitApplication?(job: NormalizedJob, payload: ApplyPayload): Promise<SubmitResult>;
+}
+
+export type FeedQuery = {
+  /** Search phrases, e.g. "full stack engineer". Feeds without search filter locally. */
+  keywords: string[];
+  /** Only return postings newer than this. */
+  maxAgeDays: number;
+  /** Feeds that pay per detail request (LinkedIn) skip ids already stored. */
+  isKnown: (sourceJobId: string) => boolean;
+  /** Cheap title pre-check so detail requests are only spent on plausible roles. */
+  wantsTitle: (title: string) => boolean;
+};
+
+/** A cross-company search or listing (remote boards, LinkedIn). */
+export interface JobFeed {
+  id: string;
+  label: string;
+  trust: SourceTrust;
+  search(query: FeedQuery): Promise<NormalizedJob[]>;
 }
 
 export type MatchResult = {

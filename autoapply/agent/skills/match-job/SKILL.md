@@ -46,6 +46,8 @@ These are different:
 
 - **Hours / timezone** (“overlap PT”, “EU timezone”, “US working hours”, “based in an EU or equivalent timezone” as a hours question) → **not a skip** when `timezoneFlexible` is true. They can align with any timezone and have worked US hours
 - **Must live or be authorized in a country/region** (“must reside in North America”, “US or Europe only”, “candidates based in the United States”) → **skip** if the profile location is not in that region
+- `profile.eligibleRegions` lists where the candidate can be hired from (for example Worldwide, EMEA, Africa, Ethiopia). A posting open only to somewhere outside that list is a **skip**, even when it says Remote
+- Contractor or employer-of-record wording (“we hire through Deel/Remote.com”, “contractors worldwide”) is a good sign for a candidate outside the US/EU, not a gap
 
 ## Seniority and years
 

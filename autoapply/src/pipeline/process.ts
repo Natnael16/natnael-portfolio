@@ -3,16 +3,19 @@ import { config } from "../config.js";
 import { critiqueDraft, healDraft } from "../agent/critique.js";
 import { draftApplication } from "../agent/draft.js";
 import { skipAfterDraft, skipAfterMatch } from "../agent/escalate.js";
-import { hardFilter, matchJob } from "../agent/match.js";
+import { hardFilter, heuristicMatch, matchJob } from "../agent/match.js";
+import { isModelConfigured } from "../agent/model.js";
 import { db } from "../db/client.js";
 import { autoApplyDecision } from "./autoApply.js";
 import { isRetryableFailure } from "./retry.js";
 import { applications, jobs } from "../db/schema.js";
 import { loadProfileRecord, syncCandidateResume } from "../lib/store.js";
 import { logAppEvent } from "../lib/appLog.js";
+import { dedupeKeys } from "../lib/dedupe.js";
+import { assessLegitimacy } from "../lib/legitimacy.js";
 import { nowIso } from "../lib/time.js";
 import { ApplyPageMissingError } from "../sources/ashby.js";
-import { getSource } from "../sources/registry.js";
+import { canAutoApply, getSource, sourceLabel, sourcePriority, sourceTrust } from "../sources/registry.js";
 import type { NormalizedJob } from "../sources/types.js";
 
 export type ProcessStats = {
@@ -26,7 +29,27 @@ export type ProcessStats = {
   alreadyScanned: number;
   tooOld: number;
   queuedAuto: number;
+  /** Matches from sources the agent cannot submit to: listed for you to apply yourself. */
+  manual: number;
+  duplicates: number;
 };
+
+export function emptyProcessStats(): ProcessStats {
+  return {
+    considered: 0,
+    skipped: 0,
+    matched: 0,
+    drafted: 0,
+    pending: 0,
+    failed: 0,
+    retried: 0,
+    alreadyScanned: 0,
+    tooOld: 0,
+    queuedAuto: 0,
+    manual: 0,
+    duplicates: 0,
+  };
+}
 
 function postedWithin(publishedAt: string | null, maxAgeMs: number): boolean {
   if (!publishedAt) return false;
@@ -89,7 +112,9 @@ async function processOne(
   const job = toNormalized(jobRow);
 
   try {
-    const match = await matchJob({ profile, resumeText, job });
+    const modelReady = isModelConfigured();
+    const match = modelReady ? await matchJob({ profile, resumeText, job }) : heuristicMatch(job, profile);
+    const legit = assessLegitimacy(job, sourceTrust(job.source), config.legitMinScore);
     const afterMatch = skipAfterMatch({ profile, job, match });
     const shouldSkip = afterMatch.action === "skip" || match.decision === "skip";
     if (shouldSkip && !opts?.draftEvenIfMatchSkip) {
@@ -102,19 +127,43 @@ async function processOne(
       return;
     }
 
+    if (!modelReady || !canAutoApply(job.source)) {
+      updateApp(appId, {
+        status: "apply_manual",
+        matchScore: match.score,
+        matchJson: JSON.stringify({ ...match, legit }),
+        error: null,
+      });
+      logAppEvent({
+        applicationId: appId,
+        jobId: jobRow.id,
+        kind: "inbox_manual",
+        level: "info",
+        message: modelReady
+          ? `${sourceLabel(job.source)} match: listed under Apply yourself`
+          : "No model configured: keyword match listed under Apply yourself",
+        detail: { score: match.score, title: jobRow.title, company: jobRow.companyName, applyUrl: jobRow.applyUrl },
+      });
+      stats.matched += 1;
+      stats.manual += 1;
+      return;
+    }
+
     updateApp(appId, {
       status: "matched",
       matchScore: match.score,
       matchJson: JSON.stringify(
         shouldSkip
-          ? { ...match, skipReason: afterMatch.reason || match.skipReason, draftedDespiteSkip: true }
-          : match,
+          ? { ...match, legit, skipReason: afterMatch.reason || match.skipReason, draftedDespiteSkip: true }
+          : { ...match, legit },
       ),
       error: null,
     });
     stats.matched += 1;
 
-    const form = await getSource(job.source).extractApplyForm(job);
+    const source = getSource(job.source);
+    if (!source.extractApplyForm) throw new Error(`${job.source} has no apply form adapter`);
+    const form = await source.extractApplyForm(job);
     if (form.pageUrl && form.pageUrl !== jobRow.applyUrl) {
       db.update(jobs)
         .set({ applyUrl: form.pageUrl })
@@ -241,35 +290,47 @@ export async function processNewJobs(opts?: {
   retryFailed?: boolean;
   ignorePostedAge?: boolean;
 }): Promise<ProcessStats> {
-  const stats: ProcessStats = {
-    considered: 0,
-    skipped: 0,
-    matched: 0,
-    drafted: 0,
-    pending: 0,
-    failed: 0,
-    retried: 0,
-    alreadyScanned: 0,
-    tooOld: 0,
-    queuedAuto: 0,
-  };
+  const stats = emptyProcessStats();
   await syncCandidateResume();
   const { profile } = loadProfileRecord();
-  const allJobs = opts?.companySlug
-    ? db.select().from(jobs).where(eq(jobs.companySlug, opts.companySlug)).all()
-    : db.select().from(jobs).all();
+  // Boards before curated feeds before LinkedIn, so when one opening is listed in several
+  // places the copy we can auto-apply to (or trust most) is the one that gets processed.
+  const allJobs = (
+    opts?.companySlug
+      ? db.select().from(jobs).where(eq(jobs.companySlug, opts.companySlug)).all()
+      : db.select().from(jobs).all()
+  ).sort((a, b) => sourcePriority(a.source) - sourcePriority(b.source) || a.id - b.id);
   const maxDrafts = opts?.maxDrafts && opts.maxDrafts > 0 ? opts.maxDrafts : Infinity;
   const retryFailed = Boolean(opts?.retryFailed);
   const maxAgeMs = Math.max(1, config.jobMaxAgeDays) * 24 * 60 * 60 * 1000;
 
+  const appByJob = new Map(
+    db
+      .select({ jobId: applications.jobId, id: applications.id })
+      .from(applications)
+      .all()
+      .map((a) => [a.jobId, a.id]),
+  );
+  /**
+   * Dedupe key -> jobs that already hold an application for that opening. Only the last 30
+   * days count, so a company re-posting the same title later is treated as a new opening.
+   */
+  const claimed = new Map<string, Array<typeof jobs.$inferSelect>>();
+  const claim = (row: typeof jobs.$inferSelect, keys: string[]) => {
+    for (const key of keys) claimed.set(key, [...(claimed.get(key) ?? []), row]);
+  };
+  const claimSince = Date.now() - 30 * 86_400_000;
+  for (const row of allJobs) {
+    if (!appByJob.has(row.id) || Date.parse(row.createdAt) < claimSince) continue;
+    claim(row, dedupeKeys(row));
+  }
+
   for (const jobRow of allJobs) {
     if (stats.drafted >= maxDrafts) break;
 
-    const existing = db
-      .select()
-      .from(applications)
-      .where(eq(applications.jobId, jobRow.id))
-      .get();
+    const existing = appByJob.has(jobRow.id)
+      ? db.select().from(applications).where(eq(applications.jobId, jobRow.id)).get()
+      : undefined;
 
     if (existing) {
       if (!retryFailed || existing.status !== "failed" || !isRetryableFailure(existing.error)) {
@@ -294,6 +355,23 @@ export async function processNewJobs(opts?: {
 
     if (!opts?.ignorePostedAge && !postedWithin(jobRow.publishedAt, maxAgeMs)) {
       stats.tooOld += 1;
+      continue;
+    }
+
+    // Only copies on another site count: two same-titled roles on one board are two openings.
+    const keys = dedupeKeys(jobRow);
+    const twin = keys
+      .flatMap((k) => claimed.get(k) ?? [])
+      .find((row) => row.id !== jobRow.id && row.source !== jobRow.source);
+    claim(jobRow, keys);
+    if (twin) {
+      insertApp(jobRow.id, "skipped", {
+        matchJson: JSON.stringify({
+          decision: "skip",
+          skipReason: `Same opening as job #${twin.id} from ${sourceLabel(twin.source)}`,
+        }),
+      });
+      stats.duplicates += 1;
       continue;
     }
 
@@ -329,18 +407,7 @@ export async function retryApplication(applicationId: number): Promise<{
   const jobRow = db.select().from(jobs).where(eq(jobs.id, app.jobId)).get();
   if (!jobRow) return { ok: false, error: "Job not found" };
   updateApp(app.id, { status: "discovered", error: null });
-  const stats: ProcessStats = {
-    considered: 1,
-    skipped: 0,
-    matched: 0,
-    drafted: 0,
-    pending: 0,
-    failed: 0,
-    retried: 1,
-    alreadyScanned: 0,
-    tooOld: 0,
-    queuedAuto: 0,
-  };
+  const stats: ProcessStats = { ...emptyProcessStats(), considered: 1, retried: 1 };
   const { profile } = loadProfileRecord();
   const filtered = hardFilter(toNormalized(jobRow), profile);
   if (filtered.skip && !wasInbox) {

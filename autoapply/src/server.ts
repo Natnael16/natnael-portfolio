@@ -28,6 +28,8 @@ import { retagInboxForAutoApply, startAutoApplyBatch, startAutoSubmitLoop, submi
 import { discoverAndStoreBoards, enableAllCompanies, isDiscovering } from "./pipeline/discover.js";
 import { retryApplication } from "./pipeline/process.js";
 import { runInProgress, startRunInBackground } from "./pipeline/run.js";
+import { boardFromUrl } from "./sources/atsUrl.js";
+import { canAutoApply, isBoardSource, sourceLabel } from "./sources/registry.js";
 import type { FieldAnswer } from "./sources/types.js";
 
 const app = new Hono();
@@ -73,13 +75,14 @@ app.get("/api/inbox", (c) => {
     })
     .from(applications)
     .innerJoin(jobs, eq(applications.jobId, jobs.id))
-    .where(inArray(applications.status, ["pending_approval", "auto_submit"]))
+    .where(inArray(applications.status, ["pending_approval", "auto_submit", "apply_manual"]))
     .orderBy(desc(applications.matchScore))
     .all();
   return c.json({
     items: rows.map(serializeApp),
     autoCount: rows.filter((r) => r.application.status === "auto_submit").length,
     reviewCount: rows.filter((r) => r.application.status === "pending_approval").length,
+    manualCount: rows.filter((r) => r.application.status === "apply_manual").length,
     queuedCount: db
       .select()
       .from(applications)
@@ -98,6 +101,7 @@ app.get("/api/history", (c) => {
         : notInArray(applications.status, [
             "pending_approval",
             "auto_submit",
+            "apply_manual",
             "submitted",
             "failed",
           ]);
@@ -197,6 +201,10 @@ app.post("/api/applications/:id/approve", async (c) => {
   const id = Number(c.req.param("id"));
   const appRow = db.select().from(applications).where(eq(applications.id, id)).get();
   if (!appRow) return c.json({ error: "not found" }, 404);
+  const jobRow = db.select({ source: jobs.source }).from(jobs).where(eq(jobs.id, appRow.jobId)).get();
+  if (jobRow && !canAutoApply(jobRow.source)) {
+    return c.json({ error: `${sourceLabel(jobRow.source)} jobs are applied to by hand: open the posting, then Mark applied` }, 400);
+  }
   const flags = JSON.parse(appRow.flagsJson || "[]") as Array<{ path: string; required: boolean }>;
   const answers = JSON.parse(appRow.answersJson || "[]") as FieldAnswer[];
   const byPath = new Map(answers.map((a) => [a.path, a]));
@@ -271,10 +279,13 @@ app.get("/api/companies", (c) => {
 
 app.post("/api/companies", async (c) => {
   const body = await c.req.json<{ slug?: string; name?: string; source?: string }>();
-  const slug = normalizeAshbySlug(body.slug);
+  // A pasted careers URL (Ashby, Greenhouse or Lever) names both the source and the slug.
+  const fromUrl = boardFromUrl(body.slug);
+  const source = fromUrl?.source ?? ((body.source ?? "ashby").trim() || "ashby");
+  if (!isBoardSource(source)) return c.json({ error: `unknown source ${source}` }, 400);
+  const slug = fromUrl?.slug ?? (source === "ashby" ? normalizeAshbySlug(body.slug) : body.slug?.trim().toLowerCase());
   if (!slug) return c.json({ error: "slug required" }, 400);
-  const name = (body.name ?? slug).trim();
-  const source = (body.source ?? "ashby").trim() || "ashby";
+  const name = (body.name || slug).trim();
   try {
     db.insert(companies)
       .values({ slug, name, source, enabled: true, createdAt: nowIso() })
@@ -360,6 +371,10 @@ function serializeApp(row: { application: typeof applications.$inferSelect; job:
     createdAt: row.application.createdAt,
     job: {
       id: row.job.id,
+      source: row.job.source,
+      sourceLabel: sourceLabel(row.job.source),
+      canAutoApply: canAutoApply(row.job.source),
+      publishedAt: row.job.publishedAt,
       title: row.job.title,
       companyName: row.job.companyName,
       companySlug: row.job.companySlug,

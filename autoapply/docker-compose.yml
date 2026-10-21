@@ -12,6 +12,7 @@ services:
     volumes:
       - ./data:/app/data
       - ./agent:/app/agent
+      - ./candidate:/app/candidate:ro
       - ./secrets:/var/secrets:ro
     restart: unless-stopped
 
@@ -26,5 +27,6 @@ services:
     volumes:
       - ./data:/app/data
       - ./agent:/app/agent
+      - ./candidate:/app/candidate:ro
       - ./secrets:/var/secrets:ro
     restart: unless-stopped

@@ -128,6 +128,8 @@ button, input, textarea, select {
   border: 1px solid #5a322f;
 }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+a.btn { display: inline-block; }
+a.btn:hover { text-decoration: none; }
 
 label.field, .field {
   display: flex;

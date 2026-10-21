@@ -6,6 +6,9 @@ import { postingRefusesSponsorship, postingRequiresOffice } from "./escalate.js"
 import { loadSkill } from "./loader.js";
 import { completeJson } from "./model.js";
 import { candidateSourcePayload } from "../lib/resumeFile.js";
+import { remoteEligibility } from "../lib/eligibility.js";
+import { assessLegitimacy } from "../lib/legitimacy.js";
+import { sourceTrust } from "../sources/registry.js";
 
 const matchSchema = z.object({
   score: z.number(),
@@ -69,11 +72,11 @@ function tokens(s: string): Set<string> {
 }
 
 /** Whole-word match, so "intern" does not catch "Internal Tools" and "ios" does not catch "Studios". */
-export function titleHasKeyword(title: string, keyword: string): boolean {
+export function containsWord(text: string, keyword: string): boolean {
   const kw = keyword.trim().toLowerCase();
   if (!kw) return false;
   const escaped = kw.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return new RegExp(`(^|[^a-z0-9])${escaped}($|[^a-z0-9])`).test(title.toLowerCase());
+  return new RegExp(`(^|[^a-z0-9])${escaped}($|[^a-z0-9])`).test(text.toLowerCase());
 }
 
 export function titlesOverlap(jobTitle: string, targetTitles: string[]): boolean {
@@ -120,9 +123,19 @@ export function hardFilter(
   job: NormalizedJob,
   profile: Profile,
 ): { skip: boolean; reason: string | null } {
+  const legit = assessLegitimacy(job, sourceTrust(job.source), config.legitMinScore);
+  if (!legit.ok) {
+    return { skip: true, reason: `Looks like a scam (${legit.score}/100): ${legit.flags.map((f) => f.reason).join("; ")}` };
+  }
+
   const remote = job.isRemote || job.workplaceType === "Remote";
   if (profile.remoteOnly && !remote) {
     return { skip: true, reason: "Not remote" };
+  }
+
+  if (remote) {
+    const eligibility = remoteEligibility(job, profile);
+    if (!eligibility.eligible) return { skip: true, reason: eligibility.reason };
   }
 
   const jd = `${job.title}\n${job.description}`;
@@ -140,7 +153,7 @@ export function hardFilter(
   }
 
   for (const raw of profile.excludeKeywords) {
-    if (titleHasKeyword(job.title, raw)) {
+    if (containsWord(job.title, raw)) {
       return { skip: true, reason: `Excluded keyword: ${raw.trim()}` };
     }
   }
@@ -216,5 +229,32 @@ export async function matchJob(args: {
     score,
     decision,
     skipReason: decision === "skip" ? skipReason || "Skipped" : null,
+  };
+}
+
+/**
+ * Keyword fit for when no model is configured: profile skills named in the posting, plus a
+ * bonus when the title is one of the target titles. Good enough to sort an "Apply yourself"
+ * list; it never feeds an auto-submit.
+ */
+export function heuristicMatch(job: NormalizedJob, profile: Profile): MatchResult {
+  const text = `${job.title}\n${job.description}`;
+  const hits = profile.skills.filter((s) => containsWord(text, s));
+  const titleHit = profile.targetTitles.find((t) => containsWord(job.title, t));
+  const score = Math.min(95, 30 + hits.length * 7 + (titleHit ? 20 : 0));
+  const threshold = Number.isFinite(config.matchThreshold) ? config.matchThreshold : 50;
+  const inbox = score >= threshold && hits.length >= 2;
+  const evidence = [
+    ...(titleHit ? [`Title matches target title "${titleHit}"`] : []),
+    ...(hits.length ? [`Posting names ${hits.slice(0, 8).join(", ")}, all on the resume`] : []),
+  ];
+  return {
+    score,
+    decision: inbox ? "inbox" : "skip",
+    confidence: "low",
+    summary: `Keyword match (no model configured): ${hits.length} of your skills named${titleHit ? ", title matches" : ""}.`,
+    evidence,
+    gaps: [],
+    skipReason: inbox ? null : `Keyword score ${score}, ${hits.length} skill(s) named`,
   };
 }

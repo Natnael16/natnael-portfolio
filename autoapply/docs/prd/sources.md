@@ -64,6 +64,15 @@ Register the adapter in `src/sources/registry.ts`. Companies store `source` + `s
 
 Do **not** add `{id}` branches to classify, wording, or cover-letter skills.
 
-## v1
+## Implemented
 
-Only `ashby` is implemented. The types and registry already take a string source id so a second adapter does not force a type rewrite.
+- `ashby`: list, extract and submit. The only source the agent submits to.
+- `greenhouse`, `lever`: list only (their apply APIs need the employer's key). `JobSource.extractApplyForm` and `submitApplication` are optional; without them a match is stored as `apply_manual` and listed under **Apply yourself** with the posting link.
+
+## Feeds
+
+Cross-company listings implement `JobFeed` (`src/sources/feeds/`): Remotive, We Work Remotely, Himalayas, Jobicy, RemoteOK, LinkedIn (logged-out public search). Each feed emits the same `NormalizedJob` and carries a `trust` level (`ats` / `curated` / `open`) that the scam screen starts from.
+
+When a feed posting's apply link points at Ashby, Greenhouse or Lever, `registerBoard` adds that company board, so the next ingest reads it at the source. Processing runs boards before feeds and drops later copies of the same opening (`src/lib/dedupe.ts`).
+
+Adding a feed: one file under `src/sources/feeds/`, add it to `allFeeds`, and name it in `FEEDS`.

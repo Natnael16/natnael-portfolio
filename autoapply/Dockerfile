@@ -11,6 +11,7 @@ COPY tsconfig.json tsconfig.build.json ./
 COPY src ./src
 COPY web ./web
 COPY agent ./agent
+COPY candidate ./candidate
 COPY data/ashby-boards.seed.json ./seed/ashby-boards.seed.json
 COPY docs ./docs
 
