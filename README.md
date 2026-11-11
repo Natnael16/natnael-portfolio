@@ -1,70 +1,51 @@
-# Natnael Tadele, personal brand site
+# Natnael Tadele: personal site
 
-Live at https://natnael.website
+Live at https://natnael.website. A light, grayscale portfolio built around a talking 3D intro video.
 
-Dark, premium portfolio for **Natnael Tadele Denbi**, Senior Full-Stack & AI Engineer.
-Built with **Next.js 14 (App Router) + TypeScript + Tailwind CSS**, self-hosted fonts, zero heavy dependencies.
-
-## Run locally
+## Run it
 
 ```bash
 npm install
-npm run dev
+npm run dev      # http://localhost:3000
+npm run build    # production build; must pass before pushing to main
 ```
 
-Then open http://localhost:3000
+Stack: Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS 4, Lenis for smooth scrolling. No other animation libraries; motion is CSS, IntersectionObserver and small `requestAnimationFrame` loops. Fonts (Inter Tight, Instrument Serif, JetBrains Mono) are self-hosted from `src/fonts`.
 
 ## Editing content
 
-**All text, stats, projects and links live in one file: [`lib/data.ts`](lib/data.ts).**
-Update numbers there (hours, users, new projects) and the whole site updates, with no component edits needed.
+All text lives in **`src/lib/data.ts`**: profile, skills, projects, proof numbers, the timeline and reviews. Components only read from it. Every line traces back to `public/Natnael_Tadele_Resume.pdf` or the Upwork contract record; keep it that way.
 
-Other notable files:
+## Sections
 
-- `app/layout.tsx` sets SEO metadata (title, description, Open Graph)
-- `app/globals.css` holds design tokens, the reveal animation, panel and stage styles
-- `public/Natnael_Tadele_Resume.pdf` is the downloadable résumé (replace when you update it)
-- `public/workstation.mp4` is the 8 second clip behind the Workshop section
+| # | Section | File | What it does |
+| --- | --- | --- | --- |
+| – | Hero | `src/components/hero/Hero.tsx` | Looping talking video blended into the page; ▶/❚❚ sound button; voice pauses when you scroll away |
+| 01 | About | `sections/About.tsx` | Résumé summary verbatim, links, quick facts |
+| 02 | Stack | `sections/Stack.tsx` | "Periodic table" of skills with family filters and a logo inspector |
+| 03 | Work | `sections/Work.tsx` | Expanding accordion; each project has a grayscale mock labelled *Illustrative UI* |
+| 04 | Proof | `sections/Proof.tsx` | Pinned horizontal gallery; numbers count up on first view |
+| 05 | Path | `sections/Path.tsx` | Education and work on one timeline that draws as you scroll |
+| 06 | Kind words | `sections/Words.tsx` | Upwork reviews, verbatim |
+| 07 | Contact | `sections/Contact.tsx` | Email with copy button, links, footer |
 
-## The Workshop section
+## Rebuilding the hero video
 
-`components/Workstation.tsx` renders `public/workstation.mp4` as a design element rather than a video player:
-no controls, no picture-in-picture, and `pointer-events-none` on the video itself.
+The intro clip is turned into `public/hero/hero.{webm,mp4}` and `public/og.jpg` by a script (needs ffmpeg and Python 3):
 
-The loop uses two clips stacked on top of each other:
+```bash
+python3 scripts/build-hero-assets.py path/to/intro.mp4 public/hero
+mv public/hero/og.jpg public/og.jpg
+ffmpeg -i public/hero/hero.mp4 -frames:v 1 public/hero/poster.webp
+```
 
-- `public/workstation.mp4`, the original
-- `public/workstation-reverse.mp4`, a pre-rendered reverse of it
+It crops tightly around the character (`--crop W:H:X:Y`, default fits the current 1344×768 clip), lifts the light-grey backdrop to pure white so `mix-blend-mode: multiply` hides it, and makes the loop seamless. The voice runs edge to edge in the source, so instead of cross-fading speech into speech it plays the line once, then dissolves back to the first frame over 0.6 s of silence. Lips are never retimed.
 
-When one ends the other starts from zero and takes over the stage. Because the reverse clip's first frame is
-the forward clip's last frame, the swap lands on an identical image and reads as one continuous back-and-forth
-loop. Nothing seeks backwards, which is what makes it smooth.
+## Rolling back
 
-An `IntersectionObserver` pauses playback whenever the section is off screen, and `prefers-reduced-motion`
-freezes the forward clip on a single frame.
+The previous dark design is commit `402133b` on `main`. To go back after this ships, revert the merge on `main` (`git revert -m 1 <merge commit>`), or in Vercel promote the last deployment built from `402133b`.
 
-Both clips preload eagerly, which costs about 6MB on first load. That is deliberate: lazy-loading the reverse
-clip meant the first handoff could arrive before its 3MB had downloaded, and the loop visibly stalled
-mid-cycle. If that page weight ever becomes a problem, re-encode the clips smaller rather than deferring the
-second one.
+## Credits and licences
 
-The stage sits in the right column at roughly half width. The clips are 720p, so giving them a smaller box
-means the browser downscales rather than stretches, and they read as sharper.
-
-Moving the mouse across the stage drives a spotlight that follows the cursor. Enough cursor movement makes
-the little round operator in the corner turn red and complain. A hint under the stage says so, and it dims
-once you have moved the cursor there. The hint is hidden on touch devices via `(hover: hover)`, since the
-interaction needs a real pointer.
-
-To swap the clip, replace both files. They must be the same length and dimensions, and the second must be a
-true reverse of the first, or the handoff will visibly jump.
-
-## Design system
-
-- Fonts: Space Grotesk (display), Inter (body), JetBrains Mono (accents), self-hosted via Fontsource
-- Accent: cyan `#22d3ee` with violet gradient highlights on near-black `#05070d`
-- Scroll reveal via a small IntersectionObserver component (`components/Reveal.tsx`), respects `prefers-reduced-motion`
-
-## Deploy
-
-See [DEPLOY.md](DEPLOY.md).
+- Technology logos in `public/logos`: [Devicon](https://devicon.dev) (MIT, `LICENSE-devicon`) and [Simple Icons](https://simpleicons.org) (CC0, `LICENSE-simple-icons.md`). Brand names and logos belong to their owners.
+- Fonts: Inter Tight, Instrument Serif and JetBrains Mono, all under the SIL Open Font License, via Fontsource.
