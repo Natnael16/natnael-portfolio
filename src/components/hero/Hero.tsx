@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { PROFILE } from "@/lib/data";
+import { PROFILE, UPWORK } from "@/lib/data";
 import { prefersReducedMotion } from "@/lib/hooks";
 import { scrollToTarget } from "@/lib/scroll";
 
@@ -95,7 +95,7 @@ export function Hero() {
       <div className="hero-grid wrap">
         <div className="hero-left">
           <p className="tag rv">
-            {PROFILE.location} · Remote
+            Now · {PROFILE.currently}
           </p>
           <h1 id="hero-title" className="hero-title">
             <span className="rv-mask" style={{ "--i": 1 } as React.CSSProperties}>
@@ -110,6 +110,35 @@ export function Hero() {
               </span>
             </span>
           </h1>
+          <a className="trust rv" style={{ "--i": 3 } as React.CSSProperties} href={PROFILE.upwork} target="_blank" rel="noreferrer"
+            aria-label={`Upwork profile: ${UPWORK.badge}, ${UPWORK.topPercent} of talent, ${UPWORK.rating} star rating, ${UPWORK.jss} Job Success, ${UPWORK.hours} hours`}>
+            <span className="trust-head">
+              <span className="trust-logo">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logos/upwork.svg" alt="" width={22} height={22} />
+              </span>
+              <span>
+                <b>{UPWORK.badge}</b>
+                <small>{UPWORK.topPercent} on Upwork ↗</small>
+              </span>
+            </span>
+            <span className="trust-stats">
+              <span>
+                <b>
+                  {UPWORK.rating} <i aria-hidden="true">★★★★★</i>
+                </b>
+                <small>Rating</small>
+              </span>
+              <span>
+                <b>{UPWORK.jss}</b>
+                <small>Job Success</small>
+              </span>
+              <span>
+                <b>{UPWORK.hours}</b>
+                <small>Hours</small>
+              </span>
+            </span>
+          </a>
         </div>
 
         <div className="hero-stage">
@@ -161,9 +190,6 @@ export function Hero() {
               Résumé ↓
             </a>
           </div>
-          <p className="hero-proof mono rv" style={{ "--i": 4 } as React.CSSProperties}>
-            Top Rated Plus · 100% Job Success · 2,200+ hrs
-          </p>
         </div>
       </div>
 
@@ -189,7 +215,18 @@ export function Hero() {
         @keyframes ping { from { transform: scale(1); opacity: .6; } to { transform: scale(1.9); opacity: 0; } }
         .hero-lede { margin: 0; max-width: 34ch; font-size: clamp(16px, 1.25vw, 19px); line-height: 1.5; color: var(--ink-2); }
         .hero-ctas { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
-        .hero-proof { margin: 22px 0 0; font-size: 12px; color: var(--mute); letter-spacing: .02em; }
+        .trust { display: inline-flex; flex-direction: column; gap: 16px; margin-top: 28px; padding: 20px 22px; border-radius: 22px; background: var(--card);
+          box-shadow: inset 0 0 0 1px var(--line), 0 20px 50px -30px rgba(13,13,13,.35); text-align: left; transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
+        .trust:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px var(--line), 0 26px 60px -30px rgba(13,13,13,.45); }
+        .trust b { display: block; font-weight: 700; letter-spacing: -.02em; font-size: 18px; white-space: nowrap; }
+        .trust small { display: block; font-size: 12px; color: var(--mute); margin-top: 2px; white-space: nowrap; }
+        .trust-head { display: flex; align-items: center; gap: 12px; }
+        .trust-logo { position: relative; width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: var(--paper);
+          box-shadow: inset 0 0 0 1px var(--line); flex: none; }
+        .trust-logo::before { content: ""; position: absolute; inset: -4px; border-radius: 16px; background: #6FDA44; opacity: .28; filter: blur(10px); z-index: -1; }
+        .trust-stats { display: grid; grid-template-columns: repeat(3, auto); gap: 22px; padding-top: 14px; border-top: 1px solid var(--line); }
+        .trust-stats b { font-size: clamp(20px, 1.8vw, 26px); }
+        .trust-stats i { font-style: normal; font-size: 11px; letter-spacing: 1px; color: var(--ink); vertical-align: 3px; }
         @media (max-width: 1100px) {
           .hero { align-items: flex-start; padding-top: 72px; }
           .hero-grid { grid-template-columns: minmax(0,1fr); justify-items: center; text-align: center; gap: 0; }

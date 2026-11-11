@@ -20,14 +20,13 @@ All text lives in **`src/lib/data.ts`**: profile, skills, projects, proof number
 
 | # | Section | File | What it does |
 | --- | --- | --- | --- |
-| – | Hero | `src/components/hero/Hero.tsx` | Looping talking video blended into the page; ▶/❚❚ sound button; voice pauses when you scroll away |
-| 01 | About | `sections/About.tsx` | Résumé summary verbatim, links, quick facts |
-| 02 | Stack | `sections/Stack.tsx` | "Periodic table" of skills with family filters and a logo inspector |
+| – | Hero | `src/components/hero/Hero.tsx` | Talking video, current role, and the Upwork card (Top Rated Plus, 5.0, 100% JSS, 2,200+ hrs) above the fold |
+| 01 | Client reviews | `sections/Words.tsx` | Upwork reviews, verbatim, as short cards; long ones fold |
+| 02 | Impact | `sections/Proof.tsx` | Engineering results in a plain grid that counts up once |
 | 03 | Work | `sections/Work.tsx` | Expanding accordion; each project has a grayscale mock labelled *Illustrative UI* |
-| 04 | Proof | `sections/Proof.tsx` | Pinned horizontal gallery; numbers count up on first view |
+| 04 | Stack | `sections/Stack.tsx` | Skills as logo chips, one row per area, strongest areas first |
 | 05 | Path | `sections/Path.tsx` | Education and work on one timeline that draws as you scroll |
-| 06 | Kind words | `sections/Words.tsx` | Upwork reviews, verbatim |
-| 07 | Contact | `sections/Contact.tsx` | Email with copy button, links, footer |
+| 06 | Contact | `sections/Contact.tsx` | Email with copy button, links, footer |
 
 ## Rebuilding the hero video
 

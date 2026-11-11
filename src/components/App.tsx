@@ -1,6 +1,5 @@
 import { Navigation } from "@/components/Navigation";
 import { Hero } from "@/components/hero/Hero";
-import { About } from "@/components/sections/About";
 import { Stack } from "@/components/sections/Stack";
 import { Work } from "@/components/sections/Work";
 import { Proof } from "@/components/sections/Proof";
@@ -18,12 +17,11 @@ export function App() {
       <Navigation />
       <main>
         <Hero />
-        <About />
-        <Stack />
-        <Work />
-        <Proof />
-        <Path />
         <Words />
+        <Proof />
+        <Work />
+        <Stack />
+        <Path />
         <Contact />
       </main>
     </>

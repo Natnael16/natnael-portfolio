@@ -37,7 +37,7 @@ export function Contact() {
   return (
     <section id="contact" className="section contact" aria-labelledby="contact-title">
       <div className="wrap">
-        <p className="tag rv">07 — Contact</p>
+        <p className="tag rv">06 — Contact</p>
         <h2 id="contact-title" className="contact-title">
           <span className="sr-only">{LINES.join(" ")}</span>
           <HopLine text={LINES[0]} offset={0} />

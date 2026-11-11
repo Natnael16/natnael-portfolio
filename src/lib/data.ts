@@ -23,17 +23,27 @@ export const PROFILE = {
   resumeSummary:
     "Senior Full-Stack Software Engineer with 4 years of experience designing, building, and scaling production web and mobile systems for startups and international clients. Strong track record of owning features end-to-end, improving system performance, and delivering reliable software used by thousands of users in live environments. Experienced in remote collaboration and independent delivery.",
   tagline: "I build production web systems that ship and scale, with mobile experience where the product needs it.",
-  currently: "Lead Engineer · Adify-AI",
+  currently: "Lead Software Developer · KiwiKrave",
   education: "BSc Software Engineering, Addis Ababa University",
   /** Paraphrase of the résumé's own words: "owning features end-to-end … delivering reliable software". */
   quote: "Own it end to end, and ship software people can rely on in production.",
 };
 
+/** From the Upwork profile and contract record. */
+export const UPWORK = {
+  badge: "Top Rated Plus",
+  topPercent: "Top 3%",
+  jss: "100%",
+  rating: "5.0",
+  hours: "2,200+",
+  contracts: "6 contracts",
+};
+
 export const NAV = [
-  { id: "about", label: "About" },
-  { id: "stack", label: "Stack" },
+  { id: "reviews", label: "Reviews" },
+  { id: "proof", label: "Impact" },
   { id: "work", label: "Work" },
-  { id: "proof", label: "Proof" },
+  { id: "stack", label: "Stack" },
   { id: "path", label: "Path" },
   { id: "contact", label: "Contact" },
 ] as const;
@@ -100,6 +110,17 @@ export type Project = {
 
 export const PROJECTS: Project[] = [
   {
+    id: "kiwikrave",
+    title: "KiwiKrave",
+    kicker: "Lead Software Developer · US startup",
+    period: "2025 – Present",
+    description:
+      "Multi-platform food ordering ecosystem: customer mobile apps, merchant dashboards, self-service kiosks and kitchen display systems. I architected the backend APIs, core business workflows and on-demand delivery relay integration.",
+    features: ["Customer apps & kiosks", "Kitchen display systems", "Delivery relay integration", "1,000+ daily users"],
+    tech: ["Flutter", "Node.js", "REST APIs"],
+    ui: "kiosk",
+  },
+  {
     id: "adify",
     title: "Adify-AI",
     kicker: "Lead Engineer · AI SaaS",
@@ -120,17 +141,6 @@ export const PROJECTS: Project[] = [
     features: ["~92% faster search", "BM25 + vector retrieval", "AI-powered features", "Promoted to Lead Developer"],
     tech: ["BM25", "Vector search"],
     ui: "search",
-  },
-  {
-    id: "kiwikrave",
-    title: "KiwiKrave",
-    kicker: "Full-Stack Engineer · US startup",
-    period: "2025 – 2026",
-    description:
-      "Multi-platform food ordering ecosystem: customer mobile apps, merchant dashboards, self-service kiosks and kitchen display systems. I architected the backend APIs, core business workflows and on-demand delivery relay integration.",
-    features: ["Customer apps & kiosks", "Kitchen display systems", "Delivery relay integration", "1,000+ daily users"],
-    tech: ["Flutter", "Node.js", "REST APIs"],
-    ui: "kiosk",
   },
   {
     id: "quicksync",
@@ -171,31 +181,6 @@ export type Proof = {
 
 export const PROOF: Proof[] = [
   {
-    value: 3,
-    prefix: "Top ",
-    suffix: "%",
-    label: "Top Rated Plus",
-    caption: "Upwork badge",
-    detail: "Earned through long-running contracts with perfect feedback.",
-    logo: { file: "upwork", tint: "#6FDA44", alt: "Upwork" },
-  },
-  {
-    value: 100,
-    suffix: "%",
-    label: "Job Success Score",
-    caption: "Upwork",
-    detail: "5.0 rating across 6 contracts.",
-    logo: { file: "upwork", tint: "#6FDA44", alt: "Upwork" },
-  },
-  {
-    value: 2200,
-    suffix: "+",
-    label: "Hours delivered",
-    caption: "Upwork",
-    detail: "For clients in Germany, the USA and the UAE.",
-    logo: { file: "upwork", tint: "#6FDA44", alt: "Upwork" },
-  },
-  {
     value: 92,
     prefix: "~",
     suffix: "%",
@@ -226,6 +211,14 @@ export const PROOF: Proof[] = [
     label: "Active users",
     caption: "QuickSync",
     detail: "Merchants selling across six commerce platforms.",
+    icon: "users",
+  },
+  {
+    value: 1000,
+    suffix: "+",
+    label: "Daily users",
+    caption: "KiwiKrave",
+    detail: "Apps, kiosks and kitchen displays running live restaurant operations.",
     icon: "users",
   },
   {
@@ -292,9 +285,9 @@ export const PATH: Stop[] = [
   },
   {
     year: "2025",
-    title: "Full-Stack Engineer",
-    place: "KiwiKrave · USA",
-    detail: "Backend APIs, core workflows and delivery relay integration for apps, kiosks and kitchen displays.",
+    title: "Lead Software Developer",
+    place: "KiwiKrave · USA · current",
+    detail: "Leading the build: backend APIs, core workflows and delivery relay integration for apps, kiosks and kitchen displays.",
     kind: "work",
   },
   {
