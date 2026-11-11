@@ -11,6 +11,10 @@ git add -A && git commit -m "Describe the change" && git push origin main
 Vercel picks up the push and **natnael.website** updates in about a minute. The old
 `natnael-portfolio-tau.vercel.app` address still works as an alias.
 
+## Rolling back
+
+The dark design that was live before the talking-video redesign is commit `402133b`. See the README for how to restore it.
+
 ## Checking it first
 
 ```bash
