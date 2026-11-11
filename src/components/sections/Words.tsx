@@ -60,7 +60,7 @@ export function Words() {
         .words-score { display: inline-flex; align-items: center; gap: 12px; padding: 12px 18px; border-radius: 999px; background: var(--card);
           box-shadow: inset 0 0 0 1px var(--line); font-size: 14px; color: var(--ink-2); margin-bottom: 8px; }
         .words-score b { color: var(--ink); }
-        .words-stars { color: var(--ink); letter-spacing: 2px; font-size: 14px; }
+        .words-stars { color: #F5B301; letter-spacing: 2px; font-size: 15px; }
         .words-grid { list-style: none; padding: 0; margin: clamp(32px, 5vw, 56px) 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; align-items: start; }
         .word { padding: 24px; display: flex; flex-direction: column; gap: 14px; }
         .word.is-featured { grid-row: span 2; }

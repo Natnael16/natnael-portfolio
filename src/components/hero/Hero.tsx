@@ -125,7 +125,7 @@ export function Hero() {
             <span className="trust-stats">
               <span>
                 <b>
-                  {UPWORK.rating} <i aria-hidden="true">★★★★★</i>
+                  {UPWORK.rating} <i aria-hidden="true">★</i>
                 </b>
                 <small>Rating</small>
               </span>
@@ -176,9 +176,6 @@ export function Hero() {
         </div>
 
         <div className="hero-right">
-          <p className="hero-lede rv" style={{ "--i": 2 } as React.CSSProperties}>
-            {PROFILE.tagline}
-          </p>
           <div className="hero-ctas rv" style={{ "--i": 3 } as React.CSSProperties}>
             <a href="#work" onClick={go("work")} className="btn btn-primary">
               Explore work
@@ -213,8 +210,7 @@ export function Hero() {
         .hero-sound.is-blocked::after { content: ""; position: absolute; inset: -2px; border-radius: 50%; border: 1.5px solid var(--ink);
           animation: ping 1.8s var(--ease) infinite; }
         @keyframes ping { from { transform: scale(1); opacity: .6; } to { transform: scale(1.9); opacity: 0; } }
-        .hero-lede { margin: 0; max-width: 34ch; font-size: clamp(16px, 1.25vw, 19px); line-height: 1.5; color: var(--ink-2); }
-        .hero-ctas { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+        .hero-ctas { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
         .trust { display: inline-flex; flex-direction: column; gap: 16px; margin-top: 28px; padding: 20px 22px; border-radius: 22px; background: var(--card);
           box-shadow: inset 0 0 0 1px var(--line), 0 20px 50px -30px rgba(13,13,13,.35); text-align: left; transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
         .trust:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px var(--line), 0 26px 60px -30px rgba(13,13,13,.45); }
@@ -226,18 +222,29 @@ export function Hero() {
         .trust-logo::before { content: ""; position: absolute; inset: -4px; border-radius: 16px; background: #6FDA44; opacity: .28; filter: blur(10px); z-index: -1; }
         .trust-stats { display: grid; grid-template-columns: repeat(3, auto); gap: 22px; padding-top: 14px; border-top: 1px solid var(--line); }
         .trust-stats b { font-size: clamp(20px, 1.8vw, 26px); }
-        .trust-stats i { font-style: normal; font-size: 11px; letter-spacing: 1px; color: var(--ink); vertical-align: 3px; }
+        .trust-stats i { font-style: normal; font-size: .9em; color: #F5B301; }
         @media (max-width: 1100px) {
-          .hero { align-items: flex-start; padding-top: 72px; }
+          /* Phone and tablet: role, title, Upwork card, the whole character and the buttons on one screen. */
+          .hero { align-items: flex-start; min-height: 100svh; padding-top: 64px; }
           .hero-grid { grid-template-columns: minmax(0,1fr); justify-items: center; text-align: center; gap: 0; }
-          .hero-left { order: 1; padding-bottom: 0; }
+          .hero-left { order: 1; padding-bottom: 0; display: flex; flex-direction: column; align-items: center; }
+          .hero-left .tag { font-size: 10.5px; }
+          .hero-title { margin-top: 10px; font-size: clamp(30px, 8.6vw, 56px); }
           .hero-title .rv-mask { display: inline-block; margin-right: .22em; }
           .hero-title .rv-mask:last-child { display: block; margin-right: 0; }
-          .hero-stage { order: 2; height: min(62svh, 118vw); margin-top: 8px; }
-          .hero-right { order: 3; padding-bottom: 48px; display: flex; flex-direction: column; align-items: center; }
-          .hero-lede { margin-top: 8px; }
-          .hero-ctas { justify-content: center; }
-          .hero-ghost { top: 52%; }
+          .trust { margin-top: 14px; padding: 12px 14px; gap: 10px; border-radius: 18px; }
+          .trust-head { gap: 10px; }
+          .trust-logo { width: 34px; height: 34px; border-radius: 10px; }
+          .trust b { font-size: 15px; }
+          .trust small { font-size: 11px; }
+          .trust-stats { gap: 18px; padding-top: 10px; }
+          .trust-stats b { font-size: 18px; }
+          .hero-stage { order: 2; height: clamp(240px, calc(100svh - 420px), 60svh); max-width: 92vw; margin-top: 6px; }
+          .hero-sound { width: 42px; height: 42px; bottom: 10%; }
+          .hero-right { order: 3; padding-bottom: 28px; display: flex; flex-direction: column; align-items: center; }
+          .hero-ctas { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 8px; }
+          .hero-ctas .btn { height: 44px; padding-inline: 18px; font-size: 14px; }
+          .hero-ghost { top: 60%; font-size: 30vw; }
         }
       `}</style>
     </section>

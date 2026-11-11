@@ -90,7 +90,8 @@ export function Proof() {
         .impact-caption { font-size: 11px; color: var(--mute); text-transform: uppercase; letter-spacing: .05em; text-align: right; }
         .impact-num { margin: 22px 0 0; font-weight: 700; font-size: clamp(44px, 4.6vw, 72px); letter-spacing: -.06em; line-height: .9; white-space: nowrap;
           font-variant-numeric: tabular-nums; }
-        .impact-affix { font-size: .5em; letter-spacing: -.03em; color: var(--mute); }
+        .impact-affix { font-size: .5em; letter-spacing: 0; color: var(--mute); margin-left: .12em; }
+        .impact-affix:first-child { margin-left: 0; margin-right: .1em; }
         .impact-label { margin: 12px 0 0; font-size: 18px; letter-spacing: -.025em; }
         .impact-detail { margin: 6px 0 0; font-size: 14px; color: var(--mute); line-height: 1.45; }
         .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
