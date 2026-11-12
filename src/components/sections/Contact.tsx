@@ -7,17 +7,22 @@ import { scrollToTarget } from "@/lib/scroll";
 const LINES = ["Let's build", "something together."];
 
 function HopLine({ text, offset }: { text: string; offset: number }) {
+  // Letters hop one by one, but each word stays unbreakable so lines wrap between words.
+  let i = offset;
   return (
     <span className="hop-line" aria-hidden="true">
-      {Array.from(text).map((ch, i) =>
-        ch === " " ? (
-          <span key={i}> </span>
-        ) : (
-          <span key={i} className="hop" style={{ "--i": offset + i } as React.CSSProperties}>
-            {ch}
+      {text.split(" ").map((word, w) => (
+        <span key={w}>
+          {w > 0 && " "}
+          <span className="hop-word">
+            {Array.from(word).map((ch) => (
+              <span key={i} className="hop" style={{ "--i": i++ } as React.CSSProperties}>
+                {ch}
+              </span>
+            ))}
           </span>
-        ),
-      )}
+        </span>
+      ))}
     </span>
   );
 }
@@ -114,23 +119,24 @@ export function Contact() {
 
       <style>{`
         .contact { padding-bottom: 32px; }
-        .contact-title { margin: 22px 0 0; font-weight: 700; font-size: clamp(44px, 9vw, 150px); letter-spacing: -.055em; line-height: .95; }
+        .contact-title { margin: 22px 0 0; font-family: var(--font-serif); font-weight: 600; font-size: clamp(44px, 9vw, 150px); letter-spacing: -.035em; line-height: 1; }
         .contact-title .serif-accent { display: block; font-weight: 400; }
         .hop-line { display: inline; }
+        .hop-word { display: inline-block; white-space: nowrap; }
         .hop { display: inline-block; transition: transform .5s var(--ease); }
         .hop:hover { transform: translateY(-.14em); transition-duration: .15s; }
         .contact-grid { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; margin-top: clamp(40px, 7vw, 88px); flex-wrap: wrap; }
         .contact-mail-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-        .contact-mail { font-size: clamp(22px, 3.4vw, 48px); font-weight: 600; letter-spacing: -.04em; text-decoration: underline;
+        .contact-mail { font-size: clamp(22px, 3.4vw, 48px); font-weight: 600; letter-spacing: -.03em; text-decoration: underline; text-decoration-color: var(--accent-2);
           text-decoration-thickness: 2px; text-underline-offset: 8px; overflow-wrap: anywhere; }
-        .contact-copy { height: 34px; padding: 0 14px; border-radius: 999px; font-size: 13px; box-shadow: inset 0 0 0 1px var(--line); background: var(--card); }
-        .contact-copy:hover { background: var(--ink); color: var(--paper); }
+        .contact-copy { height: 34px; padding: 0 14px; border-radius: 10px; font-size: 13px; box-shadow: inset 0 0 0 1px var(--line); background: var(--card); }
+        .contact-copy:hover { background: var(--accent); color: var(--on-accent); }
         .contact-links { list-style: none; padding: 0; margin: 26px 0 0; display: flex; flex-wrap: wrap; gap: 10px 24px; color: var(--ink-2); }
         .contact-links a:hover { text-decoration: underline; text-underline-offset: 4px; }
         .badge { position: relative; width: 168px; height: 168px; flex: none; display: grid; place-items: center; }
         .badge svg { position: absolute; inset: 0; width: 100%; height: 100%; animation: spin 18s linear infinite; }
-        .badge text { font-family: var(--font-mono); font-size: 13px; text-transform: uppercase; fill: var(--ink); }
-        .badge-arrow { width: 64px; height: 64px; border-radius: 50%; background: var(--ink); color: var(--paper); display: grid; place-items: center; font-size: 22px;
+        .badge text { font-family: var(--font-mono); font-size: 13px; text-transform: uppercase; fill: var(--ink-2); }
+        .badge-arrow { width: 64px; height: 64px; border-radius: 50%; background: var(--accent); color: var(--on-accent); box-shadow: inset 0 -4px 0 rgba(0,0,0,.3); display: grid; place-items: center; font-size: 22px;
           transition: transform .5s var(--ease); }
         .badge:hover .badge-arrow { transform: rotate(45deg) scale(1.06); }
         @keyframes spin { to { transform: rotate(360deg); } }

@@ -74,31 +74,31 @@ export function Work() {
       </div>
       <style>{`
         .work { display: flex; gap: 10px; height: min(78svh, 600px); margin-top: clamp(40px, 6vw, 72px); }
-        .panel { position: relative; flex: 1; min-width: 0; border-radius: 26px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line);
+        .panel { position: relative; flex: 1; min-width: 0; border-radius: var(--r-card); background: var(--card); box-shadow: inset 0 0 0 1px var(--line);
           overflow: hidden; transition: flex .8s var(--ease), box-shadow .6s var(--ease); }
-        .panel.is-open { flex: 8; box-shadow: inset 0 0 0 1px var(--line), 0 30px 80px -40px rgba(13,13,13,.35); }
+        .panel.is-open { flex: 8; box-shadow: inset 0 0 0 1px rgba(232,98,44,.18), 0 6px 0 var(--soft); }
         .panel-spine { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between;
           padding: 22px 0; width: 100%; transition: opacity .4s var(--ease); }
         .panel.is-open .panel-spine { opacity: 0; pointer-events: none; }
         .panel-spine .mono { font-size: 12px; color: var(--mute); }
-        .spine-title { writing-mode: vertical-rl; transform: rotate(180deg); font-weight: 700; font-size: 20px; letter-spacing: -.03em; white-space: nowrap; }
+        .spine-title { writing-mode: vertical-rl; transform: rotate(180deg); font-family: var(--font-serif); font-weight: 600; font-size: 21px; letter-spacing: -.02em; white-space: nowrap; }
         .spine-plus { width: 34px; height: 34px; border-radius: 50%; box-shadow: inset 0 0 0 1px var(--line); display: grid; place-items: center; font-size: 18px;
           transition: transform .5s var(--ease), background .4s var(--ease), color .4s var(--ease); }
-        .panel-spine:hover .spine-plus { transform: rotate(90deg); background: var(--ink); color: var(--paper); }
+        .panel-spine:hover .spine-plus { transform: rotate(90deg); background: var(--accent); color: var(--on-accent); }
         .panel-body { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .95fr); gap: 28px; padding: clamp(24px, 3vw, 40px);
           min-width: 760px; animation: body-in .8s var(--ease) both .15s; }
         .panel-body[hidden] { display: none; }
         @keyframes body-in { from { opacity: 0; transform: translateY(12px); } }
         .panel-copy { display: flex; flex-direction: column; min-height: 0; overflow: auto; }
-        .panel-title { margin: 14px 0 0; font-size: clamp(32px, 3.6vw, 52px); letter-spacing: -.045em; line-height: 1; }
+        .panel-title { margin: 14px 0 0; font-family: var(--font-serif); font-weight: 600; font-size: clamp(32px, 3.6vw, 52px); letter-spacing: -.03em; line-height: 1; }
         .panel-period { margin: 8px 0 0; font-size: 12px; color: var(--mute); }
         .panel-desc { margin: 18px 0 0; color: var(--ink-2); line-height: 1.55; font-size: 15.5px; }
         .panel-features { list-style: none; padding: 0; margin: 20px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; }
         .panel-features li { font-size: 14px; padding-left: 16px; position: relative; }
-        .panel-features li::before { content: ""; position: absolute; left: 0; top: .55em; width: 6px; height: 6px; border-radius: 50%; background: var(--ink); }
+        .panel-features li::before { content: ""; position: absolute; left: 0; top: .55em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-2); }
         .panel-tech { list-style: none; padding: 0; margin: auto 0 0; padding-top: 20px; display: flex; flex-wrap: wrap; gap: 6px; }
         .panel-tech li { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 999px; font-size: 12.5px;
-          background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); }
+          background: var(--soft); box-shadow: inset 0 0 0 1px var(--line); }
         .panel-ui { margin: 0; display: flex; flex-direction: column; gap: 8px; min-height: 0; animation: wipe 1s var(--ease) both .25s; }
         @keyframes wipe { from { clip-path: inset(0 0 0 100% round 18px); } to { clip-path: inset(0 0 0 0 round 18px); } }
         .panel-ui figcaption { font-size: 10.5px; color: var(--faint); text-align: right; letter-spacing: .04em; text-transform: uppercase; }

@@ -1,30 +1,35 @@
 @import "tailwindcss" source("../");
 
+/* Lava colours × Earth components: charcoal ground, oxblood clay, ember light; serif display,
+   pressed-clay buttons, cards that sit on layered strata, a faint grain over everything. */
+
 @theme {
-  --font-sans: var(--font-inter-tight), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
+  --font-sans: var(--font-work-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), ui-serif, Georgia, serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
-  --color-paper: #f4f2ee;
-  --color-card: #ffffff;
-  --color-ink: #0d0d0d;
-  --color-ink-2: #3a3a3a;
-  --color-mute: #77756f;
-  --color-faint: #a9a6a0;
-  --color-soft: #e9e6e0;
 }
 
 :root {
-  --paper: #f4f2ee;
-  --card: #ffffff;
-  --ink: #0d0d0d;
-  --ink-2: #3a3a3a;
-  --mute: #77756f;
-  --faint: #a9a6a0;
-  --line: rgba(13, 13, 13, 0.1);
-  --soft: #e9e6e0;
+  color-scheme: dark;
+  /* Names kept from the light design: paper = page, card = surface, ink = main text. */
+  --paper: #120a09;
+  --card: #1d1311;
+  --soft: #2b1a16; /* second surface, the strata under cards */
+  --ink: #f4e9e4;
+  --ink-2: #d9c8c1;
+  --mute: #ad968e;
+  --faint: #7d6a63;
+  --line: rgba(244, 233, 228, 0.1);
+  --accent: #9b1c1c; /* oxblood clay */
+  --accent-2: #e8622c; /* ember */
+  --on-accent: #fff4ee;
+  --star: #f5b301;
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --gutter: clamp(18px, 4vw, 64px);
   --section-pad: clamp(96px, 14vh, 160px);
+  --r-card: 26px 32px 24px 30px;
+  --r-btn: 14px;
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 .9  0 0 0 0 .8  0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 @layer base {
@@ -37,13 +42,25 @@
     background: var(--paper);
     color: var(--ink);
     font-family: var(--font-sans);
-    font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
     overflow-x: clip;
   }
+  /* Grain, faint strata lines and the ember glow, fixed behind everything. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(60vmax 40vmax at 12% -10%, rgba(155, 28, 28, 0.32), transparent 70%),
+      radial-gradient(50vmax 36vmax at 100% 30%, rgba(232, 98, 44, 0.1), transparent 70%),
+      var(--grain),
+      repeating-linear-gradient(176deg, transparent 0 46px, rgba(255, 240, 220, 0.018) 46px 48px);
+  }
   ::selection {
-    background: var(--ink);
-    color: var(--paper);
+    background: var(--accent);
+    color: var(--on-accent);
   }
   a {
     color: inherit;
@@ -57,7 +74,7 @@
     cursor: pointer;
   }
   :focus-visible {
-    outline: 2px solid var(--ink);
+    outline: 2px solid var(--accent-2);
     outline-offset: 3px;
     border-radius: 6px;
   }
@@ -87,7 +104,7 @@
     gap: 10px;
     font-family: var(--font-mono);
     font-size: 12px;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--mute);
   }
@@ -95,14 +112,16 @@
     content: "";
     width: 18px;
     height: 1px;
-    background: currentColor;
+    background: var(--accent-2);
   }
   .h-section {
-    font-weight: 700;
-    font-size: clamp(40px, 6.4vw, 96px);
-    letter-spacing: -0.045em;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: clamp(40px, 6.2vw, 92px);
+    letter-spacing: -0.03em;
     line-height: 1;
     margin-top: 18px;
+    text-wrap: balance;
   }
   .h-section em,
   .serif-accent {
@@ -110,54 +129,76 @@
     font-style: italic;
     font-weight: 400;
     letter-spacing: -0.02em;
-    color: var(--mute);
+    color: var(--accent-2);
   }
+  /* Earth card: an organic radius sitting on two layers of strata. */
   .card {
-    background: var(--card);
-    border-radius: 26px;
-    box-shadow: inset 0 0 0 1px var(--line);
-    transition: box-shadow 0.6s var(--ease), transform 0.6s var(--ease);
+    background: linear-gradient(180deg, rgba(255, 240, 220, 0.03), transparent), var(--card);
+    border-radius: var(--r-card);
+    box-shadow:
+      inset 0 0 0 1px var(--line),
+      0 6px 0 var(--soft),
+      0 12px 0 rgba(43, 26, 22, 0.5);
+    transition:
+      box-shadow 0.5s var(--ease),
+      transform 0.5s var(--ease);
   }
   .card.is-active,
   .card:hover {
+    transform: translateY(2px);
     box-shadow:
-      inset 0 0 0 1px var(--line),
-      0 30px 80px -30px rgba(13, 13, 13, 0.25);
+      inset 0 0 0 1px rgba(232, 98, 44, 0.22),
+      0 3px 0 var(--soft),
+      0 6px 0 rgba(43, 26, 22, 0.5);
   }
+  /* Pressed-clay buttons: a darker lip underneath that flattens when pressed. */
   .btn {
     display: inline-flex;
     align-items: center;
     gap: 10px;
     height: 48px;
     padding-inline: 22px;
-    border-radius: 999px;
-    font-weight: 500;
+    border-radius: var(--r-btn);
+    font-weight: 600;
     font-size: 15px;
     letter-spacing: -0.01em;
     white-space: nowrap;
     transition:
-      background 0.4s var(--ease),
-      color 0.4s var(--ease),
-      transform 0.4s var(--ease),
-      box-shadow 0.4s var(--ease);
+      background 0.3s var(--ease),
+      color 0.3s var(--ease),
+      transform 0.25s var(--ease),
+      box-shadow 0.25s var(--ease),
+      filter 0.3s var(--ease);
   }
   .btn:hover {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
+    filter: brightness(1.1);
+  }
+  .btn:active {
+    transform: translateY(2px);
   }
   .btn-primary {
-    background: var(--ink);
-    color: var(--paper);
+    background: var(--accent);
+    color: var(--on-accent);
+    box-shadow:
+      inset 0 -4px 0 rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.14),
+      0 10px 26px -14px var(--accent-2);
   }
-  .btn-primary:hover {
-    background: #2a2a2a;
+  .btn-primary:active {
+    box-shadow:
+      inset 0 -2px 0 rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.14);
   }
   .btn-ghost {
-    box-shadow: inset 0 0 0 1px rgba(13, 13, 13, 0.22);
+    color: var(--ink);
+    box-shadow:
+      inset 0 0 0 1.5px rgba(232, 98, 44, 0.45),
+      inset 0 -3px 0 rgba(232, 98, 44, 0.18);
   }
   .btn-ghost:hover {
-    background: var(--ink);
-    color: var(--paper);
-    box-shadow: inset 0 0 0 1px var(--ink);
+    color: var(--on-accent);
+    background: rgba(232, 98, 44, 0.12);
   }
   .mono {
     font-family: var(--font-mono);
@@ -179,7 +220,7 @@
   .rv-mask {
     display: block;
     overflow: hidden;
-    padding-bottom: 0.08em;
+    padding-bottom: 0.12em;
   }
   .rv-mask > span {
     display: block;

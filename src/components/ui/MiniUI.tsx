@@ -143,7 +143,8 @@ const BODIES: Record<Project["ui"], React.ReactNode> = {
 
 /** Rendered once by the Work section. */
 export const MINI_CSS = `
-.mini { width: 100%; height: 100%; border-radius: 18px; background: #fafaf8; box-shadow: inset 0 0 0 1px var(--line), 0 24px 60px -30px rgba(13,13,13,.35);
+.mini { --ink: #0d0d0d; --ink-2: #3a3a3a; --mute: #77756f; --faint: #a9a6a0; --line: rgba(13,13,13,.1); --soft: #e9e6e0;
+  width: 100%; height: 100%; border-radius: 18px; background: #fafaf8; box-shadow: inset 0 0 0 1px var(--line), 0 24px 60px -30px rgba(13,13,13,.35);
   display: flex; flex-direction: column; overflow: hidden; font-size: 12px; color: var(--ink-2); }
 .mini-bar { display: flex; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--line); background: #fff; }
 .mini-bar i { width: 8px; height: 8px; border-radius: 50%; background: var(--soft); }

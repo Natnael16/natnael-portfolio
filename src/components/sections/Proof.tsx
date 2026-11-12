@@ -52,7 +52,7 @@ export function Proof() {
         <SectionHead index={2} label="Impact" title="Numbers that" accent="held up." id="proof-title" />
         <ul ref={gridRef} className="impact">
           {PROOF.map((item, i) => (
-            <li key={item.label} className="impact-card rv" style={{ "--i": i, "--tint": item.logo?.tint ?? "#0d0d0d" } as React.CSSProperties}>
+            <li key={item.label} className="impact-card rv" style={{ "--i": i, "--tint": item.logo?.tint ?? "#e8622c" } as React.CSSProperties}>
               <div className="impact-top">
                 <span className="impact-icon">
                   {item.logo ? (
@@ -80,17 +80,18 @@ export function Proof() {
       </div>
       <style>{`
         .impact { list-style: none; padding: 0; margin: clamp(36px, 5vw, 64px) 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-        .impact-card { background: var(--card); border-radius: 24px; box-shadow: inset 0 0 0 1px var(--line); padding: 22px 24px 24px;
+        .impact-card { background: linear-gradient(180deg, rgba(255,240,220,.03), transparent), var(--card); border-radius: var(--r-card); padding: 22px 24px 24px;
+          box-shadow: inset 0 0 0 1px var(--line), 0 6px 0 var(--soft), 0 12px 0 rgba(43,26,22,.5);
           display: flex; flex-direction: column; transition: transform .5s var(--ease), box-shadow .5s var(--ease), opacity .9s var(--ease); }
-        .impact-card:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px var(--line), 0 30px 60px -36px rgba(13,13,13,.35); }
+        .impact-card:hover { transform: translateY(2px); box-shadow: inset 0 0 0 1px rgba(232,98,44,.22), 0 3px 0 var(--soft), 0 6px 0 rgba(43,26,22,.5); }
         .impact-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-        .impact-icon { position: relative; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--paper);
+        .impact-icon { position: relative; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--soft);
           box-shadow: inset 0 0 0 1px var(--line); color: var(--ink); flex: none; }
         .impact-icon::before { content: ""; position: absolute; inset: -4px; border-radius: 16px; background: var(--tint); opacity: .12; filter: blur(10px); z-index: -1; }
         .impact-caption { font-size: 11px; color: var(--mute); text-transform: uppercase; letter-spacing: .05em; text-align: right; }
-        .impact-num { margin: 22px 0 0; font-weight: 700; font-size: clamp(44px, 4.6vw, 72px); letter-spacing: -.06em; line-height: .9; white-space: nowrap;
+        .impact-num { margin: 22px 0 0; font-family: var(--font-serif); font-weight: 600; font-size: clamp(44px, 4.6vw, 72px); letter-spacing: -.04em; line-height: .9; white-space: nowrap;
           font-variant-numeric: tabular-nums; }
-        .impact-affix { font-size: .5em; letter-spacing: 0; color: var(--mute); margin-left: .12em; }
+        .impact-affix { font-size: .5em; letter-spacing: 0; color: var(--accent-2); margin-left: .12em; }
         .impact-affix:first-child { margin-left: 0; margin-right: .1em; }
         .impact-label { margin: 12px 0 0; font-size: 18px; letter-spacing: -.025em; }
         .impact-detail { margin: 6px 0 0; font-size: 14px; color: var(--mute); line-height: 1.45; }

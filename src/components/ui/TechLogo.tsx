@@ -72,6 +72,9 @@ const CONCEPT: Record<NonNullable<Skill["concept"]>, React.ReactNode> = {
   ),
 };
 
+/** Near-black logos that vanish on the dark page; shown inverted (hue kept). */
+const DARK_LOGOS = new Set(["Next.js", "Flask", "Django", "AWS"]);
+
 export function isBrand(name: string): boolean {
   return name in BRAND;
 }
@@ -79,7 +82,18 @@ export function isBrand(name: string): boolean {
 export function TechLogo({ name, size = 20, className }: { name: string; size?: number; className?: string }) {
   if (BRAND[name]) {
     // eslint-disable-next-line @next/next/no-img-element
-    return <img src={BRAND[name]} alt="" width={size} height={size} className={className} loading="lazy" decoding="async" />;
+    return (
+      <img
+        src={BRAND[name]}
+        alt=""
+        width={size}
+        height={size}
+        className={className}
+        style={DARK_LOGOS.has(name) ? { filter: "invert(1) hue-rotate(180deg)" } : undefined}
+        loading="lazy"
+        decoding="async"
+      />
+    );
   }
   const concept = SKILLS.find((s) => s.name === name)?.concept;
   if (!concept) return null;

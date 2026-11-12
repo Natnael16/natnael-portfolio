@@ -15,9 +15,9 @@
     "react-dom": "^19.1.10"
   },
   "devDependencies": {
-    "@fontsource-variable/inter-tight": "^5.3.0",
+    "@fontsource-variable/fraunces": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
-    "@fontsource/instrument-serif": "^5.3.0",
+    "@fontsource-variable/work-sans": "^5.3.0",
     "@playwright/test": "^1.65.0",
     "@tailwindcss/postcss": "^4.3.5",
     "@types/node": "^20.19.43",

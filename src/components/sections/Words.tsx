@@ -57,22 +57,22 @@ export function Words() {
       </div>
       <style>{`
         .words-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
-        .words-score { display: inline-flex; align-items: center; gap: 12px; padding: 12px 18px; border-radius: 999px; background: var(--card);
-          box-shadow: inset 0 0 0 1px var(--line); font-size: 14px; color: var(--ink-2); margin-bottom: 8px; }
+        .words-score { display: inline-flex; align-items: center; gap: 12px; padding: 12px 18px; border-radius: var(--r-btn); background: var(--card);
+          box-shadow: inset 0 0 0 1px var(--line), 0 4px 0 var(--soft); font-size: 14px; color: var(--ink-2); margin-bottom: 8px; }
         .words-score b { color: var(--ink); }
         .words-stars { color: #F5B301; letter-spacing: 2px; font-size: 15px; }
         .words-grid { list-style: none; padding: 0; margin: clamp(32px, 5vw, 56px) 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; align-items: start; }
         .word { padding: 24px; display: flex; flex-direction: column; gap: 14px; }
         .word.is-featured { grid-row: span 2; }
         .word blockquote { margin: 0; font-size: 17px; line-height: 1.5; letter-spacing: -.012em; }
-        .word.is-featured blockquote { font-size: clamp(19px, 1.7vw, 23px); line-height: 1.42; }
+        .word.is-featured blockquote { font-family: var(--font-serif); font-size: clamp(20px, 1.8vw, 25px); line-height: 1.4; }
         .word blockquote.is-clamped { display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden; }
         .word-more { align-self: flex-start; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; color: var(--mute); padding: 0; }
         .word-more:hover { color: var(--ink); }
         .word-meta { margin: 0; padding-top: 14px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 3px; font-size: 14px; }
         .word-meta .mono { font-size: 11.5px; color: var(--mute); }
         .word-tags { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-        .word-tags li { font-size: 12px; padding: 4px 10px; border-radius: 999px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); }
+        .word-tags li { font-size: 12px; padding: 4px 10px; border-radius: 8px; background: var(--soft); box-shadow: inset 0 0 0 1px var(--line); }
         @media (max-width: 1000px) { .words-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .word.is-featured { grid-row: auto; grid-column: 1 / -1; } }
         @media (max-width: 640px) { .words-grid { grid-template-columns: minmax(0, 1fr); } }
       `}</style>

@@ -3,19 +3,19 @@ import localFont from "next/font/local";
 import { PROFILE } from "@/lib/data";
 import "./globals.css";
 
-const interTight = localFont({
-  src: "../fonts/InterTight.woff2",
-  variable: "--font-inter-tight",
+const workSans = localFont({
+  src: "../fonts/WorkSans.woff2",
+  variable: "--font-work-sans",
   weight: "100 900",
   display: "swap",
 });
 
-const instrument = localFont({
+const fraunces = localFont({
   src: [
-    { path: "../fonts/InstrumentSerif-Regular.woff2", style: "normal", weight: "400" },
-    { path: "../fonts/InstrumentSerif-Italic.woff2", style: "italic", weight: "400" },
+    { path: "../fonts/Fraunces.woff2", style: "normal", weight: "100 900" },
+    { path: "../fonts/Fraunces-Italic.woff2", style: "italic", weight: "100 900" },
   ],
-  variable: "--font-instrument",
+  variable: "--font-fraunces",
   display: "swap",
 });
 
@@ -40,12 +40,12 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f4f2ee",
+  themeColor: "#120a09",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${interTight.variable} ${instrument.variable} ${jetbrains.variable}`}>
+    <html lang="en" className={`${workSans.variable} ${fraunces.variable} ${jetbrains.variable}`}>
       <body>{children}</body>
     </html>
   );

@@ -65,7 +65,13 @@ export function Navigation() {
 
   const go = (id: string | null) => (e: React.MouseEvent) => {
     e.preventDefault();
-    setOpen(false);
+    if (open) {
+      // The open menu locks scrolling; release it before scrolling, or the jump is swallowed.
+      setScrollLocked(false);
+      setOpen(false);
+      requestAnimationFrame(() => scrollToTarget(id));
+      return;
+    }
     scrollToTarget(id);
   };
 
@@ -122,38 +128,39 @@ export function Navigation() {
       </div>
       <style>{`
         .nav-progress { position: fixed; inset: 0 0 auto; height: 2px; z-index: 60; pointer-events: none; }
-        .nav-progress > div { height: 100%; background: var(--ink); transform-origin: 0 50%; transform: scaleX(0); }
+        .nav-progress > div { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transform-origin: 0 50%; transform: scaleX(0); }
         .nav { position: fixed; inset: 10px 0 auto; z-index: 50; pointer-events: none; }
         .nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
         .nav-brand { pointer-events: auto; display: flex; align-items: center; gap: 12px; }
         .nav-mark { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 600;
-          box-shadow: inset 0 0 0 1.5px var(--ink); transition: background .5s var(--ease), color .5s var(--ease), transform .8s var(--ease); }
+          box-shadow: inset 0 0 0 1.5px var(--ink); font-family: var(--font-mono); transition: background .5s var(--ease), color .5s var(--ease), transform .8s var(--ease); }
         .nav-brand:hover .nav-mark { transform: rotate(360deg); }
-        .nav.is-scrolled .nav-mark { background: var(--ink); color: var(--paper); }
+        .nav.is-scrolled .nav-mark { background: var(--accent); color: var(--on-accent); box-shadow: inset 0 -3px 0 rgba(0,0,0,.3); }
         .nav-name { font-weight: 600; letter-spacing: -.02em; transition: opacity .4s var(--ease), transform .4s var(--ease); }
         .nav.is-scrolled .nav-name { opacity: 0; transform: translateX(-6px); pointer-events: none; }
         .nav-links { pointer-events: auto; position: relative; display: flex; gap: 2px; padding: 5px; border-radius: 999px;
           transition: background .5s var(--ease), box-shadow .5s var(--ease); }
-        .nav.is-scrolled .nav-links { background: rgba(255,255,255,.72); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-          box-shadow: inset 0 0 0 1px var(--line), 0 10px 30px -18px rgba(13,13,13,.4); }
-        .nav-links a { position: relative; z-index: 1; padding: 9px 16px; border-radius: 999px; font-size: 14px; color: var(--ink-2); transition: color .4s var(--ease); }
+        .nav.is-scrolled .nav-links { background: rgba(29,19,17,.82); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+          box-shadow: inset 0 0 0 1px var(--line), 0 4px 0 var(--soft); border-radius: var(--r-btn); }
+        .nav-links a { position: relative; z-index: 1; padding: 9px 16px; border-radius: 10px; font-size: 14px; color: var(--ink-2); transition: color .4s var(--ease); }
         .nav-links a:hover { color: var(--ink); }
-        .nav-links a.is-active { color: var(--paper); }
-        .nav-pill { position: absolute; top: 5px; bottom: 5px; left: 0; border-radius: 999px; background: var(--ink);
+        .nav-links a.is-active { color: var(--on-accent); }
+        .nav-pill { position: absolute; top: 5px; bottom: 5px; left: 0; border-radius: 10px; background: var(--accent); box-shadow: inset 0 -2px 0 rgba(0,0,0,.3);
           transition: transform .55s var(--ease), width .55s var(--ease); }
-        .nav-menu { display: none; pointer-events: auto; height: 42px; padding: 0 18px; border-radius: 999px; font-size: 14px; font-weight: 500;
-          background: rgba(255,255,255,.8); backdrop-filter: blur(12px); box-shadow: inset 0 0 0 1px var(--line); }
+        .nav-menu { display: none; pointer-events: auto; height: 42px; padding: 0 18px; border-radius: var(--r-btn); font-size: 14px; font-weight: 600;
+          background: rgba(29,19,17,.85); backdrop-filter: blur(12px); box-shadow: inset 0 0 0 1px var(--line), 0 3px 0 var(--soft); }
         .menu { position: fixed; inset: 0; z-index: 70; background: var(--paper); padding: 88px var(--gutter) 32px; display: flex; flex-direction: column;
           clip-path: circle(0% at calc(100% - 50px) 32px); visibility: hidden;
           transition: clip-path .8s var(--ease), visibility 0s linear .8s; }
         .menu.is-open { clip-path: circle(150% at calc(100% - 50px) 32px); visibility: visible; transition: clip-path .8s var(--ease); }
-        .menu-close { position: absolute; top: 10px; right: var(--gutter); height: 42px; padding: 0 18px; border-radius: 999px;
-          background: var(--ink); color: var(--paper); font-size: 14px; font-weight: 500; }
+        .menu-close { position: absolute; top: 10px; right: var(--gutter); height: 42px; padding: 0 18px; border-radius: var(--r-btn);
+          background: var(--accent); color: var(--on-accent); font-size: 14px; font-weight: 600; box-shadow: inset 0 -3px 0 rgba(0,0,0,.3); }
         .menu ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
         .menu li { opacity: 0; transform: translateY(20px); transition: opacity .7s var(--ease), transform .7s var(--ease);
           transition-delay: calc(150ms + var(--i) * 60ms); }
         .menu.is-open li { opacity: 1; transform: none; }
-        .menu li a { display: flex; align-items: baseline; gap: 14px; font-size: clamp(40px, 12vw, 64px); font-weight: 700; letter-spacing: -.045em; line-height: 1.05; }
+        .menu li a { display: flex; align-items: baseline; gap: 14px; font-family: var(--font-serif); font-size: clamp(40px, 12vw, 64px); font-weight: 600; letter-spacing: -.03em; line-height: 1.1; }
+        .menu li a:active, .menu li a:hover { color: var(--accent-2); }
         .menu li .mono { font-size: 12px; color: var(--mute); letter-spacing: 0; font-weight: 400; }
         .menu-mail { margin-top: auto; color: var(--mute); text-decoration: underline; text-underline-offset: 4px; }
         @media (max-width: 860px) {

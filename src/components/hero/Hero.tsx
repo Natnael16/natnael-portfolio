@@ -20,6 +20,13 @@ export function Hero() {
     if (!v) return;
     const reduced = prefersReducedMotion();
 
+    // Transparent WebM everywhere it is supported. Safari and every iOS browser (all WebKit)
+    // ignore WebM alpha, so they get the same frames blended onto the page colour.
+    const ua = navigator.userAgent;
+    const webkitOnly = /iPhone|iPad|iPod/.test(ua) || (/AppleWebKit/.test(ua) && !/Chrome|Chromium|Edg|Android/.test(ua));
+    v.src = webkitOnly ? "/hero/hero-dark.mp4" : "/hero/hero-alpha.webm";
+    if (webkitOnly) v.poster = "/hero/poster-dark.webp";
+
     const start = async () => {
       if (reduced) return;
       v.muted = false;
@@ -149,11 +156,9 @@ export function Hero() {
             loop
             playsInline
             preload="auto"
-            poster="/hero/poster.webp"
+            poster="/hero/poster-alpha.webp"
             aria-label={`An animated ${PROFILE.name} introducing himself as a ${PROFILE.role.toLowerCase()}`}
           >
-            <source src="/hero/hero.webm" type="video/webm" />
-            <source src="/hero/hero.mp4" type="video/mp4" />
           </video>
           <button
             ref={soundBtn}
@@ -194,26 +199,33 @@ export function Hero() {
         .hero { position: relative; min-height: 100svh; display: flex; align-items: flex-end; overflow: clip; padding-top: 64px; }
         .hero-ghost { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); margin: 0;
           font-weight: 800; font-size: clamp(96px, 23vw, 420px); letter-spacing: -.06em; line-height: .8; white-space: nowrap;
-          color: transparent; -webkit-text-stroke: 1.2px rgba(13,13,13,.13); user-select: none; pointer-events: none;
+          color: transparent; -webkit-text-stroke: 1.2px rgba(244,233,228,.07); font-family: var(--font-serif); user-select: none; pointer-events: none;
           animation: ghost-in 1.6s var(--ease) both; }
         @keyframes ghost-in { from { opacity: 0; letter-spacing: -.02em; } }
         .hero-grid { position: relative; display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
           align-items: end; gap: clamp(16px, 3vw, 48px); }
         .hero-left, .hero-right { padding-bottom: clamp(32px, 9vh, 96px); }
-        .hero-title { margin: 18px 0 0; font-weight: 700; font-size: clamp(40px, 4.6vw, 84px); white-space: nowrap; letter-spacing: -.045em; line-height: .98; }
-        .hero-title em { font-family: var(--font-serif); font-style: italic; font-weight: 400; letter-spacing: -.02em; color: var(--mute); }
+        .hero-title { margin: 18px 0 0; font-family: var(--font-serif); font-weight: 600; font-size: clamp(40px, 4.6vw, 84px); white-space: nowrap; letter-spacing: -.03em; line-height: 1; }
+        .hero-title em { font-style: italic; font-weight: 400; letter-spacing: -.02em; color: var(--accent-2); }
         .hero-stage { position: relative; height: min(92svh, 1040px); aspect-ratio: 616 / 768; }
-        .hero-video { width: 100%; height: 100%; object-fit: contain; object-position: bottom; mix-blend-mode: multiply; display: block; }
+        .hero-stage::before { content: ""; position: absolute; left: 50%; bottom: 8%; width: 82%; aspect-ratio: 1; transform: translateX(-50%); border-radius: 50%;
+          background: radial-gradient(circle, rgba(155,28,28,.5) 0%, rgba(232,98,44,.08) 45%, transparent 68%); filter: blur(12px); pointer-events: none; }
+        .hero-stage::after { content: ""; position: absolute; left: 50%; bottom: 3%; width: 70%; height: 16%; transform: translateX(-50%); border-radius: 50%;
+          background: radial-gradient(ellipse, rgba(138,147,86,.18), transparent 70%); pointer-events: none; }
+        /* The white sneakers lose their edges on a white floor, so the clip fades out just above them. */
+        .hero-video { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: contain; object-position: bottom; display: block;
+          -webkit-mask-image: linear-gradient(180deg, #000 80%, transparent 95%); mask-image: linear-gradient(180deg, #000 80%, transparent 95%); }
         .hero-sound { position: absolute; right: 4%; bottom: 14%; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center;
-          background: var(--ink); color: var(--paper); transition: transform .4s var(--ease); }
+          z-index: 2; background: var(--accent); color: var(--on-accent);
+          box-shadow: inset 0 -3px 0 rgba(0,0,0,.3), 0 10px 26px -10px var(--accent-2); transition: transform .4s var(--ease); }
         .hero-sound:hover { transform: scale(1.06); }
-        .hero-sound.is-blocked::after { content: ""; position: absolute; inset: -2px; border-radius: 50%; border: 1.5px solid var(--ink);
+        .hero-sound.is-blocked::after { content: ""; position: absolute; inset: -2px; border-radius: 50%; border: 1.5px solid var(--accent-2);
           animation: ping 1.8s var(--ease) infinite; }
         @keyframes ping { from { transform: scale(1); opacity: .6; } to { transform: scale(1.9); opacity: 0; } }
         .hero-ctas { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
-        .trust { display: inline-flex; flex-direction: column; gap: 16px; margin-top: 28px; padding: 20px 22px; border-radius: 22px; background: var(--card);
-          box-shadow: inset 0 0 0 1px var(--line), 0 20px 50px -30px rgba(13,13,13,.35); text-align: left; transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
-        .trust:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px var(--line), 0 26px 60px -30px rgba(13,13,13,.45); }
+        .trust { display: inline-flex; flex-direction: column; gap: 16px; margin-top: 28px; padding: 20px 22px; border-radius: var(--r-card); background: var(--card);
+          box-shadow: inset 0 0 0 1px var(--line), 0 6px 0 var(--soft), 0 12px 0 rgba(43,26,22,.5); text-align: left; transition: transform .5s var(--ease), box-shadow .5s var(--ease); }
+        .trust:hover { transform: translateY(2px); box-shadow: inset 0 0 0 1px rgba(232,98,44,.22), 0 3px 0 var(--soft), 0 6px 0 rgba(43,26,22,.5); }
         .trust b { display: block; font-weight: 700; letter-spacing: -.02em; font-size: 18px; white-space: nowrap; }
         .trust small { display: block; font-size: 12px; color: var(--mute); margin-top: 2px; white-space: nowrap; }
         .trust-head { display: flex; align-items: center; gap: 12px; }
@@ -221,8 +233,8 @@ export function Hero() {
           box-shadow: inset 0 0 0 1px var(--line); flex: none; }
         .trust-logo::before { content: ""; position: absolute; inset: -4px; border-radius: 16px; background: #6FDA44; opacity: .28; filter: blur(10px); z-index: -1; }
         .trust-stats { display: grid; grid-template-columns: repeat(3, auto); gap: 22px; padding-top: 14px; border-top: 1px solid var(--line); }
-        .trust-stats b { font-size: clamp(20px, 1.8vw, 26px); }
-        .trust-stats i { font-style: normal; font-size: .9em; color: #F5B301; }
+        .trust-stats b { font-family: var(--font-serif); font-weight: 600; font-size: clamp(20px, 1.8vw, 26px); }
+        .trust-stats i { font-style: normal; font-size: .9em; color: var(--star); }
         @media (max-width: 1100px) {
           /* Phone and tablet: role, title, Upwork card, the whole character and the buttons on one screen. */
           .hero { align-items: flex-start; min-height: 100svh; padding-top: 64px; }

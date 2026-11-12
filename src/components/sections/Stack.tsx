@@ -35,10 +35,10 @@ export function Stack() {
         .stack-row dt { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--mute); }
         .stack-row dd { margin: 0; }
         .stack-row ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-        .stack-row li { display: inline-flex; align-items: center; gap: 9px; height: 42px; padding: 0 16px 0 12px; border-radius: 999px; background: var(--card);
-          box-shadow: inset 0 0 0 1px var(--line); font-size: 15px; font-weight: 500; letter-spacing: -.01em; color: var(--ink);
+        .stack-row li { display: inline-flex; align-items: center; gap: 9px; height: 42px; padding: 0 16px 0 12px; border-radius: 12px; background: var(--card);
+          box-shadow: inset 0 0 0 1px var(--line), 0 3px 0 var(--soft); font-size: 15px; font-weight: 500; letter-spacing: -.01em; color: var(--ink);
           transition: transform .4s var(--ease), box-shadow .4s var(--ease); }
-        .stack-row li:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px var(--line), 0 12px 24px -16px rgba(13,13,13,.4); }
+        .stack-row li:hover { transform: translateY(1px); box-shadow: inset 0 0 0 1px rgba(232,98,44,.3), 0 2px 0 var(--soft); }
         .stack-row li img, .stack-row li svg { width: 20px; height: 20px; object-fit: contain; flex: none; }
         @media (max-width: 700px) {
           .stack-row { grid-template-columns: minmax(0, 1fr); gap: 10px; }

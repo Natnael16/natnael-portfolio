@@ -70,20 +70,20 @@ export function Path() {
         .path { position: relative; padding-left: 36px; }
         .path ol { list-style: none; margin: 0; padding: 0; }
         .path-spine { position: absolute; left: 7px; top: 8px; bottom: 8px; width: 2px; background: var(--soft); border-radius: 2px; }
-        .path-spine > span { position: absolute; inset: 0; background: var(--ink); transform-origin: 50% 0; border-radius: 2px; }
+        .path-spine > span { position: absolute; inset: 0; background: linear-gradient(180deg, var(--accent), var(--accent-2)); transform-origin: 50% 0; border-radius: 2px; }
         .stop { position: relative; display: grid; grid-template-columns: 64px minmax(0,1fr); gap: 16px; padding-bottom: 44px;
           opacity: .32; transition: opacity .6s var(--ease); }
         .stop.is-lit { opacity: 1; }
         .stop-dot { position: absolute; left: -36px; top: 6px; width: 16px; height: 16px; border-radius: 50%; background: var(--paper);
           box-shadow: inset 0 0 0 2px var(--faint); transition: box-shadow .5s var(--ease), background .5s var(--ease); }
-        .stop.is-lit .stop-dot { background: var(--ink); box-shadow: inset 0 0 0 2px var(--ink), 0 0 0 6px rgba(13,13,13,.07); }
+        .stop.is-lit .stop-dot { background: var(--accent-2); box-shadow: inset 0 0 0 2px var(--accent-2), 0 0 0 6px rgba(232,98,44,.14); }
         .stop-year { font-size: 13px; color: var(--mute); padding-top: 4px; }
-        .stop-body h3 { margin: 0; font-size: clamp(22px, 2.2vw, 30px); letter-spacing: -.035em; line-height: 1.1; }
+        .stop-body h3 { margin: 0; font-family: var(--font-serif); font-weight: 600; font-size: clamp(22px, 2.2vw, 30px); letter-spacing: -.02em; line-height: 1.1; }
         .stop-place { margin: 6px 0 0; color: var(--ink-2); display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
         .stop-kind { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--mute); padding: 3px 8px; border-radius: 999px;
           box-shadow: inset 0 0 0 1px var(--line); }
         .stop-detail { margin: 10px 0 0; color: var(--mute); line-height: 1.55; max-width: 56ch; }
-        .stop-card { border: 1.5px dashed rgba(13,13,13,.25); border-radius: 22px; padding: 22px; }
+        .stop-card { border: 1.5px dashed rgba(232,98,44,.4); border-radius: var(--r-card); padding: 22px; }
         .stop-next { padding-bottom: 0; }
         @media (max-width: 900px) {
           .path-wrap { grid-template-columns: minmax(0,1fr); }
